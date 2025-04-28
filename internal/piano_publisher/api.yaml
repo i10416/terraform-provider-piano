@@ -25060,12 +25060,14 @@ components:
             - new
         fixed_promotion_code:
           type: string
+          nullable: true
           description: The fixed value for all the promotion codes
         unlimited_uses:
           type: boolean
           description: Whether to allow unlimited uses
         promotion_code_prefix:
           type: string
+          nullable: true
           description: The prefix for all the codes
         new_customers_only:
           type: boolean
@@ -25092,6 +25094,7 @@ components:
             - percentage
         uses_allowed:
           type: integer
+          nullable: true
           description: The number of uses allowed by the promotion
           format: int32
         uses:
@@ -33725,7 +33728,7 @@ components:
         - Promotion
       type: object
       properties:
-        Promotion:
+        promotion:
           $ref: '#/components/schemas/Promotion'
       additionalProperties: false
     PromotionFixedDiscountResult:

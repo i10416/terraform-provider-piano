@@ -135,6 +135,7 @@ func (p *PianoProvider) DataSources(ctx context.Context) []func() datasource.Dat
 		NewContractDataSource,
 		NewTermDataSource,
 		NewExternalTermDataSource,
+		NewPromotionDataSource,
 	}
 }
 
