@@ -21,7 +21,7 @@ func TestValidPianoEndpointFunction_Known(t *testing.T) {
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			{
-				Config: `
+				Config: providerConfig + `
 				output "test" {
 					value = provider::piano::valid_piano_endpoint("https://sandbox.piano.io/api/v3")
 				}

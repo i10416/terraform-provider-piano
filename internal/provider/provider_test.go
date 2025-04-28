@@ -16,7 +16,7 @@ const (
 	providerConfig = `
 provider "piano" {
   endpoint = "https://sandbox.piano.io/api/v3"
-  token = "**********************"
+  api_token = "**********************"
 }
 `
 )
