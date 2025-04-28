@@ -10,6 +10,17 @@ import (
 	"github.com/hashicorp/terraform-plugin-go/tfprotov6"
 )
 
+const (
+	// providerConfig is a shared configuration to combine with the actual
+	// test configuration so the piano client is properly configured.
+	providerConfig = `
+provider "piano" {
+  endpoint = "https://sandbox.piano.io/api/v3"
+  token = "**********************"
+}
+`
+)
+
 // testAccProtoV6ProviderFactories is used to instantiate a provider during acceptance testing.
 // The factory function is called for each Terraform CLI command to create a provider
 // server that the CLI can connect to and interact with.
