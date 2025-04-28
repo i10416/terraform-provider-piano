@@ -177,7 +177,7 @@ func (r *PaymentTermResource) Configure(ctx context.Context, req resource.Config
 
 func (*PaymentTermResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "Payment Term resource",
+		MarkdownDescription: "Payment Term resource. Payment term is a term that is used to create a payment.",
 		Attributes: map[string]schema.Attribute{
 			"aid": schema.StringAttribute{
 				Required:            true,

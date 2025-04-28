@@ -69,7 +69,7 @@ func TestValidPianoEndpointFunction_Unknown(t *testing.T) {
 				resource "terraform_data" "test" {
 					input = "https://sandbox.piano.io/api/v3"
 				}
-				
+
 				output "test" {
 					value = provider::piano::valid_piano_endpoint(terraform_data.test.output)
 				}

@@ -225,7 +225,7 @@ func (r *TermDataSource) Metadata(ctx context.Context, req datasource.MetadataRe
 }
 func (*TermDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "Term datasource",
+		MarkdownDescription: "Term datasource. Term is a pair of price and schedule that is a part of offers.",
 		Attributes: map[string]schema.Attribute{
 			"payment_allow_renew_days": schema.Int32Attribute{
 				Computed:            true,

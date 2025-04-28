@@ -59,7 +59,7 @@ func (d *ResourceDataSource) Metadata(ctx context.Context, req datasource.Metada
 
 func (d *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "Resource data source",
+		MarkdownDescription: "Resource data source. This data source is used to get the resource details.",
 		Attributes: map[string]schema.Attribute{
 			"rid": schema.StringAttribute{
 				MarkdownDescription: "The resource ID",

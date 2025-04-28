@@ -68,7 +68,7 @@ func (d *ContractDataSource) Metadata(ctx context.Context, req datasource.Metada
 
 func (d *ContractDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "Contract data source",
+		MarkdownDescription: "Contract data source. This data source is used to get the contract details.",
 		Attributes: map[string]schema.Attribute{
 			"aid": schema.StringAttribute{
 				Required:            true,

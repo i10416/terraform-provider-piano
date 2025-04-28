@@ -63,7 +63,7 @@ func (d *LicenseeDataSource) Metadata(ctx context.Context, req datasource.Metada
 
 func (d *LicenseeDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "Licensee data source",
+		MarkdownDescription: "Licensee data source. Licensee is a company that has access to resources in the app.",
 		Attributes: map[string]schema.Attribute{
 			"aid": schema.StringAttribute{
 				MarkdownDescription: "piano application id",
