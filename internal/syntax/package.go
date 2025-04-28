@@ -29,7 +29,7 @@ func AnyResponseFrom(response *http.Response, diagnostics *diag.Diagnostics) (*p
 	}
 	if anyResponse.Code != 0 {
 		diagnostics.AddError(fmt.Sprintf("Status Error: %d: %s", anyResponse.Code, *anyResponse.Message), string(anyResponse.Raw))
-		return nil, errors.New("Status Error")
+		return nil, errors.New("status error")
 	}
 	return &anyResponse, err
 }

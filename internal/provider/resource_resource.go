@@ -401,7 +401,7 @@ type ResourceResourceId struct {
 func ResourceResourceIdFromString(input string) (*ResourceResourceId, error) {
 	parts := strings.Split(input, "/")
 	if len(parts) != 2 {
-		return nil, errors.New("Resource resource id must be in {aid}/{rid} format")
+		return nil, errors.New("resource resource id must be in {aid}/{rid} format")
 	}
 	data := ResourceResourceId{
 		Aid:        parts[0],

@@ -118,5 +118,5 @@ func (v ExternalAPIFieldResourceModelListValue) Type(ctx context.Context) attr.T
 }
 
 func (v ExternalAPIFieldResourceModelListValue) Value(ctx context.Context) ([]attr.Value, diag.Diagnostics) {
-	return v.ListValue.Elements(), nil
+	return v.Elements(), nil
 }

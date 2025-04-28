@@ -88,11 +88,11 @@ type ContractResource struct {
 	client *piano_publisher.Client
 }
 
-func (_ *ContractResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+func (*ContractResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
 	resp.TypeName = req.ProviderTypeName + "_contract"
 }
 
-func (_ *ContractResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
+func (*ContractResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "Contract Resource",
 		Attributes: map[string]schema.Attribute{
@@ -421,7 +421,7 @@ type ContractResourceId struct {
 func ContractResourceIdFromString(input string) (*ContractResourceId, error) {
 	parts := strings.Split(input, "/")
 	if len(parts) != 2 {
-		return nil, errors.New("Contract resource id must be in {aid}/{contract_id} format")
+		return nil, errors.New("contract resource id must be in {aid}/{contract_id} format")
 	}
 	return &ContractResourceId{Aid: parts[0], ContractId: parts[1]}, nil
 }

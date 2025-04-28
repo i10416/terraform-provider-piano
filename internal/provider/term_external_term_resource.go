@@ -66,7 +66,7 @@ type ExternalTermResourceModel struct {
 func (r *ExternalTermResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
 	resp.TypeName = req.ProviderTypeName + "_external_term"
 }
-func (_ *ExternalTermResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
+func (*ExternalTermResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "ExternalTerm resource",
 		Attributes: map[string]schema.Attribute{

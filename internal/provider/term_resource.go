@@ -39,7 +39,7 @@ type TermResourceId struct {
 func TermResourceIdFromString(input string) (*TermResourceId, error) {
 	parts := strings.Split(input, "/")
 	if len(parts) != 2 {
-		return nil, errors.New("Term resource id must be in {aid}/{term_id} format")
+		return nil, errors.New("term resource id must be in {aid}/{term_id} format")
 	}
 	return &TermResourceId{Aid: parts[0], TermId: parts[1]}, nil
 }
