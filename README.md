@@ -17,6 +17,14 @@ go install
 
 ## Using the provider
 
+```tf
+provider "piano" {
+  endpoint  = "https://sandbox.piano.io/api/v3"
+  api_token = "*********************"
+}
+```
+
+For more details, visit https://registry.terraform.io/providers/i10416/piano/latest/docs
 
 ## Developing the provider
 
