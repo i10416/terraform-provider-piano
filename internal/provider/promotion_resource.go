@@ -99,34 +99,35 @@ func (r *PromotionResource) Metadata(ctx context.Context, req resource.MetadataR
 // }
 
 type PromotionResourceModel struct {
-	DiscountType             types.String                          `tfsdk:"discount_type"`                // The promotion discount type
-	Name                     types.String                          `tfsdk:"name"`                         // The promotion name
-	StartDate                types.Int64                           `tfsdk:"start_date"`                   // The start date.
-	TermDependencyType       types.String                          `tfsdk:"term_dependency_type"`         // The type of dependency to terms
-	CreateDate               types.Int64                           `tfsdk:"create_date"`                  // The creation date
-	Deleted                  types.Bool                            `tfsdk:"deleted"`                      // Whether the object is deleted
-	UpdateBy                 types.String                          `tfsdk:"update_by"`                    // The last user to update the object
-	Aid                      types.String                          `tfsdk:"aid"`                          // The application ID
-	FixedPromotionCode       types.String                          `tfsdk:"fixed_promotion_code"`         // The fixed value for all the promotion codes
-	Uses                     types.Int32                           `tfsdk:"uses"`                         // How many times the promotion has been used
-	BillingPeriodLimit       types.Int32                           `tfsdk:"billing_period_limit"`         // Promotion discount applies to number of billing periods
-	CanBeAppliedOnRenewal    types.Bool                            `tfsdk:"can_be_applied_on_renewal"`    // Whether the promotion can be applied on renewal
-	DiscountCurrency         types.String                          `tfsdk:"discount_currency"`            // The promotion discount currency
-	UpdateDate               types.Int64                           `tfsdk:"update_date"`                  // The update date
-	ApplyToAllBillingPeriods types.Bool                            `tfsdk:"apply_to_all_billing_periods"` // Whether to apply the promotion discount to all billing periods ("TRUE")or the first billing period only ("FALSE")
-	NeverAllowZero           types.Bool                            `tfsdk:"never_allow_zero"`             // Never allow the value of checkout to be zero
-	EndDate                  types.Int64                           `tfsdk:"end_date"`                     // The end date
-	FixedDiscountList        []PromotionFixedDiscountResourceModel `tfsdk:"fixed_discount_list"`
-	NewCustomersOnly         types.Bool                            `tfsdk:"new_customers_only"`    // Whether the promotion allows new customers only
-	Status                   types.String                          `tfsdk:"status"`                // The promotion status
-	PercentageDiscount       types.Float64                         `tfsdk:"percentage_discount"`   // The promotion discount, percentage
-	UnlimitedUses            types.Bool                            `tfsdk:"unlimited_uses"`        // Whether to allow unlimited uses
-	DiscountAmount           types.Float64                         `tfsdk:"discount_amount"`       // The promotion discount
-	PromotionId              types.String                          `tfsdk:"promotion_id"`          // The promotion ID
-	PromotionCodePrefix      types.String                          `tfsdk:"promotion_code_prefix"` // The prefix for all the codes
-	CreateBy                 types.String                          `tfsdk:"create_by"`             // The user who created the object
-	UsesAllowed              types.Int32                           `tfsdk:"uses_allowed"`          // The number of uses allowed by the promotion
-	Discount                 types.String                          `tfsdk:"discount"`              // The promotion discount, formatted
+	Aid                      types.String  `tfsdk:"aid"`                          // The application ID
+	PromotionId              types.String  `tfsdk:"promotion_id"`                 // The promotion ID
+	Name                     types.String  `tfsdk:"name"`                         // The promotion name
+	StartDate                types.Int64   `tfsdk:"start_date"`                   // The start date.
+	EndDate                  types.Int64   `tfsdk:"end_date"`                     // The end date
+	NewCustomersOnly         types.Bool    `tfsdk:"new_customers_only"`           // Whether the promotion allows new customers only
+	DiscountType             types.String  `tfsdk:"discount_type"`                // The promotion discount type
+	PercentageDiscount       types.Float64 `tfsdk:"percentage_discount"`          // The promotion discount, percentage
+	UnlimitedUses            types.Bool    `tfsdk:"unlimited_uses"`               // Whether to allow unlimited uses
+	UsesAllowed              types.Int32   `tfsdk:"uses_allowed"`                 // The number of uses allowed by the promotion
+	NeverAllowZero           types.Bool    `tfsdk:"never_allow_zero"`             // Never allow the value of checkout to be zero
+	FixedPromotionCode       types.String  `tfsdk:"fixed_promotion_code"`         // The fixed value for all the promotion codes
+	PromotionCodePrefix      types.String  `tfsdk:"promotion_code_prefix"`        // The prefix for all the codes
+	TermDependencyType       types.String  `tfsdk:"term_dependency_type"`         // The type of dependency to terms
+	ApplyToAllBillingPeriods types.Bool    `tfsdk:"apply_to_all_billing_periods"` // Whether to apply the promotion discount to all billing periods ("TRUE")or the first billing period only ("FALSE")
+	CanBeAppliedOnRenewal    types.Bool    `tfsdk:"can_be_applied_on_renewal"`    // Whether the promotion can be applied on renewal
+	BillingPeriodLimit       types.Int32   `tfsdk:"billing_period_limit"`         // Promotion discount applies to number of billing periods
+
+	// Deleted            types.Bool   `tfsdk:"deleted"`              // Whether the object is deleted
+	//	UpdateBy                 types.String                          `tfsdk:"update_by"`                    // The last user to update the object
+	//	Uses                     types.Int32                           `tfsdk:"uses"`                         // How many times the promotion has been used
+	DiscountCurrency  types.String                          `tfsdk:"discount_currency"` // The promotion discount currency
+	DiscountAmount    types.Float64                         `tfsdk:"discount_amount"`   // The promotion discount
+	FixedDiscountList []PromotionFixedDiscountResourceModel `tfsdk:"fixed_discount_list"`
+	// Status             types.String                          `tfsdk:"status"`              // The promotion status
+	//CreateBy                 types.String                          `tfsdk:"create_by"`             // The user who created the object
+	// Discount    types.String `tfsdk:"discount"`     // The promotion discount, formatted
+	// CreateDate         types.Int64  `tfsdk:"create_date"`          // The creation date
+	//	UpdateDate               types.Int64                           `tfsdk:"update_date"`                  // The update date
 }
 type PromotionFixedDiscountResourceModel struct {
 	FixedDiscountId types.String  `tfsdk:"fixed_discount_id"` // The fixed discount ID
@@ -313,15 +314,14 @@ func (r *PromotionResource) Read(ctx context.Context, req resource.ReadRequest, 
 	}
 
 	data := result.Promotion
-	state.Discount = types.StringValue(data.Discount)
+	//state.Discount = types.StringValue(data.Discount)
 	state.UsesAllowed = types.Int32PointerValue(data.UsesAllowed)
-	state.CreateBy = types.StringValue(data.CreateBy)
 	state.PromotionCodePrefix = types.StringPointerValue(data.PromotionCodePrefix)
 	state.PromotionId = types.StringValue(data.PromotionId)
 	state.DiscountAmount = types.Float64Value(data.DiscountAmount)
 	state.UnlimitedUses = types.BoolValue(data.UnlimitedUses)
 	state.PercentageDiscount = types.Float64Value(data.PercentageDiscount)
-	state.Status = types.StringValue(string(data.Status))
+	//state.Status = types.StringValue(string(data.Status))
 	state.NewCustomersOnly = types.BoolValue(data.NewCustomersOnly)
 	fixedDiscountListElements := []PromotionFixedDiscountResourceModel{}
 	for _, element := range data.FixedDiscountList {
@@ -331,16 +331,13 @@ func (r *PromotionResource) Read(ctx context.Context, req resource.ReadRequest, 
 	state.EndDate = types.Int64Value(int64(data.EndDate))
 	state.NeverAllowZero = types.BoolValue(data.NeverAllowZero)
 	state.ApplyToAllBillingPeriods = types.BoolValue(data.ApplyToAllBillingPeriods)
-	state.UpdateDate = types.Int64Value(int64(data.UpdateDate))
+	//state.UpdateDate = types.Int64Value(int64(data.UpdateDate))
 	state.DiscountCurrency = types.StringValue(data.DiscountCurrency)
 	state.CanBeAppliedOnRenewal = types.BoolValue(data.CanBeAppliedOnRenewal)
 	state.BillingPeriodLimit = types.Int32Value(data.BillingPeriodLimit)
-	state.Uses = types.Int32Value(data.Uses)
 	state.FixedPromotionCode = types.StringPointerValue(data.FixedPromotionCode)
 	state.Aid = types.StringValue(data.Aid)
-	state.UpdateBy = types.StringValue(data.UpdateBy)
-	state.Deleted = types.BoolValue(data.Deleted)
-	state.CreateDate = types.Int64Value(int64(data.CreateDate))
+	//state.CreateDate = types.Int64Value(int64(data.CreateDate))
 	state.TermDependencyType = types.StringValue(string(data.TermDependencyType))
 	state.StartDate = types.Int64Value(int64(data.StartDate))
 	state.Name = types.StringValue(data.Name)
@@ -373,15 +370,14 @@ func (r *PromotionResource) Create(ctx context.Context, req resource.CreateReque
 	}
 
 	data := result.Promotion
-	state.Discount = types.StringValue(data.Discount)
+	// state.Discount = types.StringValue(data.Discount)
 	state.UsesAllowed = types.Int32PointerValue(data.UsesAllowed)
-	state.CreateBy = types.StringValue(data.CreateBy)
 	state.PromotionCodePrefix = types.StringPointerValue(data.PromotionCodePrefix)
 	state.PromotionId = types.StringValue(data.PromotionId)
 	state.DiscountAmount = types.Float64Value(data.DiscountAmount)
 	state.UnlimitedUses = types.BoolValue(data.UnlimitedUses)
 	state.PercentageDiscount = types.Float64Value(data.PercentageDiscount)
-	state.Status = types.StringValue(string(data.Status))
+	// state.Status = types.StringValue(string(data.Status))
 	state.NewCustomersOnly = types.BoolValue(data.NewCustomersOnly)
 	fixedDiscountListElements := []PromotionFixedDiscountResourceModel{}
 	for _, element := range data.FixedDiscountList {
@@ -391,16 +387,13 @@ func (r *PromotionResource) Create(ctx context.Context, req resource.CreateReque
 	state.EndDate = types.Int64Value(int64(data.EndDate))
 	state.NeverAllowZero = types.BoolValue(data.NeverAllowZero)
 	state.ApplyToAllBillingPeriods = types.BoolValue(data.ApplyToAllBillingPeriods)
-	state.UpdateDate = types.Int64Value(int64(data.UpdateDate))
+	// state.UpdateDate = types.Int64Value(int64(data.UpdateDate))
 	state.DiscountCurrency = types.StringValue(data.DiscountCurrency)
 	state.CanBeAppliedOnRenewal = types.BoolValue(data.CanBeAppliedOnRenewal)
 	state.BillingPeriodLimit = types.Int32Value(data.BillingPeriodLimit)
-	state.Uses = types.Int32Value(data.Uses)
 	state.FixedPromotionCode = types.StringPointerValue(data.FixedPromotionCode)
 	state.Aid = types.StringValue(data.Aid)
-	state.UpdateBy = types.StringValue(data.UpdateBy)
-	state.Deleted = types.BoolValue(data.Deleted)
-	state.CreateDate = types.Int64Value(int64(data.CreateDate))
+	// state.CreateDate = types.Int64Value(int64(data.CreateDate))
 	state.TermDependencyType = types.StringValue(string(data.TermDependencyType))
 	state.StartDate = types.Int64Value(int64(data.StartDate))
 	state.Name = types.StringValue(data.Name)
@@ -434,15 +427,14 @@ func (r *PromotionResource) Update(ctx context.Context, req resource.UpdateReque
 	}
 
 	data := result.Promotion
-	state.Discount = types.StringValue(data.Discount)
+	// state.Discount = types.StringValue(data.Discount)
 	state.UsesAllowed = types.Int32PointerValue(data.UsesAllowed)
-	state.CreateBy = types.StringValue(data.CreateBy)
 	state.PromotionCodePrefix = types.StringPointerValue(data.PromotionCodePrefix)
 	state.PromotionId = types.StringValue(data.PromotionId)
 	state.DiscountAmount = types.Float64Value(data.DiscountAmount)
 	state.UnlimitedUses = types.BoolValue(data.UnlimitedUses)
 	state.PercentageDiscount = types.Float64Value(data.PercentageDiscount)
-	state.Status = types.StringValue(string(data.Status))
+	// state.Status = types.StringValue(string(data.Status))
 	state.NewCustomersOnly = types.BoolValue(data.NewCustomersOnly)
 	fixedDiscountListElements := []PromotionFixedDiscountResourceModel{}
 	for _, element := range data.FixedDiscountList {
@@ -452,16 +444,13 @@ func (r *PromotionResource) Update(ctx context.Context, req resource.UpdateReque
 	state.EndDate = types.Int64Value(int64(data.EndDate))
 	state.NeverAllowZero = types.BoolValue(data.NeverAllowZero)
 	state.ApplyToAllBillingPeriods = types.BoolValue(data.ApplyToAllBillingPeriods)
-	state.UpdateDate = types.Int64Value(int64(data.UpdateDate))
+	// state.UpdateDate = types.Int64Value(int64(data.UpdateDate))
 	state.DiscountCurrency = types.StringValue(data.DiscountCurrency)
 	state.CanBeAppliedOnRenewal = types.BoolValue(data.CanBeAppliedOnRenewal)
 	state.BillingPeriodLimit = types.Int32Value(data.BillingPeriodLimit)
-	state.Uses = types.Int32Value(data.Uses)
 	state.FixedPromotionCode = types.StringPointerValue(data.FixedPromotionCode)
 	state.Aid = types.StringValue(data.Aid)
-	state.UpdateBy = types.StringValue(data.UpdateBy)
-	state.Deleted = types.BoolValue(data.Deleted)
-	state.CreateDate = types.Int64Value(int64(data.CreateDate))
+	// state.CreateDate = types.Int64Value(int64(data.CreateDate))
 	state.TermDependencyType = types.StringValue(string(data.TermDependencyType))
 	state.StartDate = types.Int64Value(int64(data.StartDate))
 	state.Name = types.StringValue(data.Name)
