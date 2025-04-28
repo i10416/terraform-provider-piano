@@ -134,7 +134,7 @@ type PromotionFixedDiscountDataSourceModel struct {
 	AmountValue     types.Float64 `tfsdk:"amount_value"`      // The fixed discount amount value
 }
 
-func (_ *PromotionDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
+func (*PromotionDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		Attributes: map[string]schema.Attribute{
 			"discount_type": schema.StringAttribute{
