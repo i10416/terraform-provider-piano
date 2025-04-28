@@ -175,7 +175,7 @@ func (r *PaymentTermResource) Configure(ctx context.Context, req resource.Config
 	r.client = client
 }
 
-func (_ *PaymentTermResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
+func (*PaymentTermResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "Payment Term resource",
 		Attributes: map[string]schema.Attribute{

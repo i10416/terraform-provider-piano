@@ -404,7 +404,7 @@ type LicenseeResourceId struct {
 func LicenseeResourceIdFromString(input string) (*LicenseeResourceId, error) {
 	parts := strings.Split(input, "/")
 	if len(parts) != 2 {
-		return nil, errors.New("Licensee resource id must be in {aid}/{licensee_id} format")
+		return nil, errors.New("licensee resource id must be in {aid}/{licensee_id} format")
 	}
 	data := LicenseeResourceId{
 		Aid:        parts[0],
