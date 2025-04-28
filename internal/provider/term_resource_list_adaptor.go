@@ -22,7 +22,7 @@ type ExternalAPIFieldResourceModelList struct {
 }
 
 func (l ExternalAPIFieldResourceModelList) String() string {
-	return fmt.Sprintf("ExternalAPIFieldResourceModelList")
+	return "ExternalAPIFieldResourceModelList"
 }
 func (l ExternalAPIFieldResourceModelList) Equal(a attr.Type) bool {
 	r, ok := a.(ExternalAPIFieldResourceModelList)

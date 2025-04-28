@@ -395,7 +395,7 @@ func LicenseeRepresentativesStringFromModels(models []RepresentativeResourceMode
 	return &representativesAsString, nil
 }
 
-// LicenseeResourceId represents a piano.io licensee resource identifier in "{aid}/{licensee_id}" format
+// LicenseeResourceId represents a piano.io licensee resource identifier in "{aid}/{licensee_id}" format.
 type LicenseeResourceId struct {
 	Aid        string
 	LicenseeId string

@@ -30,7 +30,7 @@ type LightOfferResourceModel struct {
 	OfferId types.String `tfsdk:"offer_id"` // The offer ID
 }
 
-// TermResourceId represents a piano.io contract resource identifier in "{aid}/{contract_id}" format
+// TermResourceId represents a piano.io contract resource identifier in "{aid}/{contract_id}" format.
 type TermResourceId struct {
 	Aid    string
 	TermId string

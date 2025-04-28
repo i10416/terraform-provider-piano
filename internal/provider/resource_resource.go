@@ -392,7 +392,7 @@ func ResourceManagerUidsStringFromModels(models []ManagerResourceModel) string {
 	return managerUidsAsString
 }
 
-// ResourceResourceId represents a piano.io Resource resource identifier in "{aid}/{rid}" format
+// ResourceResourceId represents a piano.io Resource resource identifier in "{aid}/{rid}" format.
 type ResourceResourceId struct {
 	Aid        string
 	ResourceId string

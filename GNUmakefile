@@ -7,7 +7,7 @@ install: build
 	go install -v ./...
 
 lint:
-	golangci-lint run
+	go tool golangci-lint run
 
 generate:
 	go tool github.com/hashicorp/terraform-plugin-docs/cmd/tfplugindocs generate --provider-dir . -provider-name piano

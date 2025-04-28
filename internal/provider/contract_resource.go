@@ -233,7 +233,7 @@ func (r *ContractResource) Create(ctx context.Context, req resource.CreateReques
 		LicenseeId:           plan.LicenseeId.ValueString(),
 		ContractType:         piano_publisher.PostPublisherLicensingContractCreateRequestContractTypeEMAILDOMAINCONTRACT,
 		ContractName:         plan.Name.ValueString(),
-		SeatsNumber:          int32(plan.SeatsNumber.ValueInt32()),
+		SeatsNumber:          plan.SeatsNumber.ValueInt32(),
 		IsHardSeatsLimitType: plan.IsHardSeatsLimitType.ValueBool(),
 		Rid:                  plan.Rid.ValueString(),
 		LandingPageUrl:       plan.LandingPageUrl.ValueStringPointer(),
@@ -333,7 +333,7 @@ func (r *ContractResource) Update(ctx context.Context, req resource.UpdateReques
 		Rid:                  state.Rid.ValueString(),
 		ContractId:           state.ContractId.ValueString(),
 		LicenseeId:           state.LicenseeId.ValueString(),
-		SeatsNumber:          int32(state.SeatsNumber.ValueInt32()),
+		SeatsNumber:          state.SeatsNumber.ValueInt32(),
 		IsHardSeatsLimitType: state.IsHardSeatsLimitType.ValueBool(),
 		ContractName:         state.Name.ValueString(),
 		LandingPageUrl:       state.LandingPageUrl.ValueString(),
@@ -412,7 +412,7 @@ func (r *ContractResource) ImportState(ctx context.Context, req resource.ImportS
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("contract_id"), resourceId.ContractId)...)
 }
 
-// ContractResourceId represents a piano.io contract resource identifier in "{aid}/{contract_id}" format
+// ContractResourceId represents a piano.io contract resource identifier in "{aid}/{contract_id}" format.
 type ContractResourceId struct {
 	Aid        string
 	ContractId string
