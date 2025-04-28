@@ -1,0 +1,14 @@
+# Copyright (c) Yoichiro Ito <contact.110416@gmail.com>
+# SPDX-License-Identifier: MPL-2.0
+package: piano_publisher
+output: PianoPublisherClient.go
+generate:
+  models: true
+  client: true
+output-options:
+  exclude-operation-ids:
+    # Hide some APIs to avoid name collision :(
+    - "GetPublisherWebhookList"
+    - "GetPublisherResourceBundles"
+    - "GetPublisherTermList"
+

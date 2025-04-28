@@ -1,0 +1,2 @@
+Golang default JSON codec matches fields in case-insensitive tay, but we should not depend on this behavior.
+https://stackoverflow.com/questions/49006073/json-unmarshal-struct-case-sensitively
