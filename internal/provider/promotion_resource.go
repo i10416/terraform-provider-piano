@@ -3,13 +3,23 @@ package provider
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
+	"strings"
 	"terraform-provider-piano/internal/piano_publisher"
 	"terraform-provider-piano/internal/syntax"
 
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/boolplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/float64planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int32planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/listplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
@@ -50,54 +60,6 @@ func (r *PromotionResource) Metadata(ctx context.Context, req resource.MetadataR
 	resp.TypeName = req.ProviderTypeName + "_promotion"
 }
 
-// func PromotionFixedDiscountAttrType() attr.Type {
-// 	return basetypes.ObjectType{
-// 		AttrTypes: map[string]attr.Type{
-// 			"fixed_discount_id": types.StringType,
-// 			"currency":          types.StringType,
-// 			"amount":            types.StringType,
-// 			"amount_value":      types.Float64Type,
-// 		},
-// 	}
-// }
-
-// func PromotionAttrType() attr.Type {
-// 	return basetypes.ObjectType{
-// 		AttrTypes: map[string]attr.Type{
-// 			"discount_type":                types.StringType,
-// 			"name":                         types.StringType,
-// 			"start_date":                   types.Int64Type,
-// 			"term_dependency_type":         types.StringType,
-// 			"create_date":                  types.Int64Type,
-// 			"deleted":                      types.BoolType,
-// 			"update_by":                    types.StringType,
-// 			"aid":                          types.StringType,
-// 			"fixed_promotion_code":         types.StringType,
-// 			"uses":                         types.Int32Type,
-// 			"billing_period_limit":         types.Int32Type,
-// 			"can_be_applied_on_renewal":    types.BoolType,
-// 			"discount_currency":            types.StringType,
-// 			"update_date":                  types.Int64Type,
-// 			"apply_to_all_billing_periods": types.BoolType,
-// 			"never_allow_zero":             types.BoolType,
-// 			"end_date":                     types.Int64Type,
-// 			"fixed_discount_list": types.ListType{
-// 				ElemType: PromotionFixedDiscountAttrType(),
-// 			},
-// 			"new_customers_only":    types.BoolType,
-// 			"status":                types.StringType,
-// 			"percentage_discount":   types.Float64Type,
-// 			"unlimited_uses":        types.BoolType,
-// 			"discount_amount":       types.Float64Type,
-// 			"promotion_id":          types.StringType,
-// 			"promotion_code_prefix": types.StringType,
-// 			"create_by":             types.StringType,
-// 			"uses_allowed":          types.Int32Type,
-// 			"discount":              types.StringType,
-// 		},
-// 	}
-// }
-
 type PromotionResourceModel struct {
 	Aid                      types.String  `tfsdk:"aid"`                          // The application ID
 	PromotionId              types.String  `tfsdk:"promotion_id"`                 // The promotion ID
@@ -120,15 +82,16 @@ type PromotionResourceModel struct {
 	// Deleted            types.Bool   `tfsdk:"deleted"`              // Whether the object is deleted
 	//	UpdateBy                 types.String                          `tfsdk:"update_by"`                    // The last user to update the object
 	//	Uses                     types.Int32                           `tfsdk:"uses"`                         // How many times the promotion has been used
-	DiscountCurrency  types.String                          `tfsdk:"discount_currency"` // The promotion discount currency
-	DiscountAmount    types.Float64                         `tfsdk:"discount_amount"`   // The promotion discount
+	// DiscountCurrency  types.String                          `tfsdk:"discount_currency"` // The promotion discount currency
+	// DiscountAmount    types.Float64                         `tfsdk:"discount_amount"` // The promotion discount
 	FixedDiscountList []PromotionFixedDiscountResourceModel `tfsdk:"fixed_discount_list"`
 	// Status             types.String                          `tfsdk:"status"`              // The promotion status
 	//CreateBy                 types.String                          `tfsdk:"create_by"`             // The user who created the object
 	// Discount    types.String `tfsdk:"discount"`     // The promotion discount, formatted
-	// CreateDate         types.Int64  `tfsdk:"create_date"`          // The creation date
-	//	UpdateDate               types.Int64                           `tfsdk:"update_date"`                  // The update date
+	CreateDate types.Int64 `tfsdk:"create_date"` // The creation date
+	UpdateDate types.Int64 `tfsdk:"update_date"` // The update date
 }
+
 type PromotionFixedDiscountResourceModel struct {
 	FixedDiscountId types.String  `tfsdk:"fixed_discount_id"` // The fixed discount ID
 	Currency        types.String  `tfsdk:"currency"`          // The currency of the fixed discount
@@ -139,79 +102,86 @@ type PromotionFixedDiscountResourceModel struct {
 func (_ *PromotionResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		Attributes: map[string]schema.Attribute{
+			// always required
+			"aid": schema.StringAttribute{
+				Required:            true,
+				MarkdownDescription: "The application ID",
+			},
+			// required in request
+			"promotion_id": schema.StringAttribute{
+				Computed: true,
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.UseStateForUnknown(),
+				},
+				MarkdownDescription: "The promotion ID",
+			},
+			// always required
+			"name": schema.StringAttribute{
+				Required:            true,
+				MarkdownDescription: "The promotion name",
+			},
+			// filled with empty value in create response
 			"discount_type": schema.StringAttribute{
-				Computed:            true,
+				Computed: true,
+				Optional: true,
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.UseStateForUnknown(),
+				},
 				MarkdownDescription: "The promotion discount type",
 				Validators:          []validator.String{stringvalidator.OneOf("fixed", "percentage")},
 			},
-			"name": schema.StringAttribute{
-				Computed:            true,
-				MarkdownDescription: "The promotion name",
-			},
-			"start_date": schema.Int64Attribute{
-				Computed:            true,
-				MarkdownDescription: "The start date.",
-			},
+			// filled with empty value in create response
 			"term_dependency_type": schema.StringAttribute{
-				Computed:            true,
+				Computed: true,
+				Optional: true,
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.UseStateForUnknown(),
+				},
 				MarkdownDescription: "The type of dependency to terms",
 				Validators:          []validator.String{stringvalidator.OneOf("all", "include", "unlocked")},
 			},
-			"create_date": schema.Int64Attribute{
-				Computed:            true,
-				MarkdownDescription: "The creation date",
-			},
-			"deleted": schema.BoolAttribute{
-				Computed:            true,
-				MarkdownDescription: "Whether the object is deleted",
-			},
-			"update_by": schema.StringAttribute{
-				Computed:            true,
-				MarkdownDescription: "The last user to update the object",
-			},
-			"aid": schema.StringAttribute{
-				Computed:            true,
-				MarkdownDescription: "The application ID",
-			},
-			"fixed_promotion_code": schema.StringAttribute{
-				Optional:            true,
-				Computed:            true,
-				MarkdownDescription: "The fixed value for all the promotion codes",
-			},
-			"uses": schema.Int32Attribute{
-				Computed:            true,
-				MarkdownDescription: "How many times the promotion has been used",
-			},
+			// filled with empty value in create response
 			"billing_period_limit": schema.Int32Attribute{
-				Computed:            true,
+				Optional: true,
+				Computed: true,
+				PlanModifiers: []planmodifier.Int32{
+					int32planmodifier.UseStateForUnknown(),
+				},
 				MarkdownDescription: "Promotion discount applies to number of billing periods",
 			},
+			// filled with empty value in create response
 			"can_be_applied_on_renewal": schema.BoolAttribute{
-				Computed:            true,
+				Computed: true,
+				Optional: true,
+				PlanModifiers: []planmodifier.Bool{
+					boolplanmodifier.UseStateForUnknown(),
+				},
 				MarkdownDescription: "Whether the promotion can be applied on renewal",
 			},
-			"discount_currency": schema.StringAttribute{
-				Computed:            true,
-				MarkdownDescription: "The promotion discount currency",
-			},
-			"update_date": schema.Int64Attribute{
-				Computed:            true,
-				MarkdownDescription: "The update date",
-			},
+			// filled with empty value in create response
 			"apply_to_all_billing_periods": schema.BoolAttribute{
-				Computed:            true,
+				Computed: true,
+				Optional: true,
+				PlanModifiers: []planmodifier.Bool{
+					boolplanmodifier.UseStateForUnknown(),
+				},
 				MarkdownDescription: "Whether to apply the promotion discount to all billing periods (\"TRUE\")or the first billing period only (\"FALSE\")",
 			},
+			// filled with empty value in create response
 			"never_allow_zero": schema.BoolAttribute{
-				Computed:            true,
+				Computed: true,
+				Optional: true,
+				PlanModifiers: []planmodifier.Bool{
+					boolplanmodifier.UseStateForUnknown(),
+				},
 				MarkdownDescription: "Never allow the value of checkout to be zero",
 			},
-			"end_date": schema.Int64Attribute{
-				Computed:            true,
-				MarkdownDescription: "The end date",
-			},
+			// filled with empty value in create response
 			"fixed_discount_list": schema.ListNestedAttribute{
 				Computed: true,
+				PlanModifiers: []planmodifier.List{
+					listplanmodifier.UseStateForUnknown(),
+				},
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"fixed_discount_id": schema.StringAttribute{
@@ -233,48 +203,78 @@ func (_ *PromotionResource) Schema(ctx context.Context, req resource.SchemaReque
 					},
 				},
 			},
+			// filled with empty value in create response
 			"new_customers_only": schema.BoolAttribute{
-				Computed:            true,
+				Optional: true,
+				Computed: true,
+				PlanModifiers: []planmodifier.Bool{
+					boolplanmodifier.UseStateForUnknown(),
+				},
 				MarkdownDescription: "Whether the promotion allows new customers only",
 			},
-			"status": schema.StringAttribute{
-				Computed:            true,
-				MarkdownDescription: "The promotion status",
-				Validators:          []validator.String{stringvalidator.OneOf("active", "expired", "new")},
-			},
+			// filled with empty value in create response
 			"percentage_discount": schema.Float64Attribute{
-				Computed:            true,
+				Optional: true,
+				Computed: true,
+				PlanModifiers: []planmodifier.Float64{
+					float64planmodifier.UseStateForUnknown(),
+				},
 				MarkdownDescription: "The promotion discount, percentage",
 			},
+			// filled with empty value in create response
+			"start_date": schema.Int64Attribute{
+				Optional: true,
+				Computed: true,
+				PlanModifiers: []planmodifier.Int64{
+					int64planmodifier.UseStateForUnknown(),
+				},
+				MarkdownDescription: "The start date.",
+			},
+			// filled with empty value in create response
+			"end_date": schema.Int64Attribute{
+				Optional: true,
+				Computed: true,
+				PlanModifiers: []planmodifier.Int64{
+					int64planmodifier.UseStateForUnknown(),
+				},
+				MarkdownDescription: "The end date",
+			},
+			// nullable in response
+			"promotion_code_prefix": schema.StringAttribute{
+				Optional: true,
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.UseStateForUnknown(),
+				},
+				MarkdownDescription: "The prefix for all the codes",
+			},
+			// nullable in response
+			"uses_allowed": schema.Int32Attribute{
+				Optional: true,
+				// updated to null when unlimited_uses = true
+				MarkdownDescription: "The number of uses allowed by the promotion. If this value is null, it indicates unlimited uses allowed.",
+			},
+			// nullable in response
+			"fixed_promotion_code": schema.StringAttribute{
+				Optional: true,
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.UseStateForUnknown(),
+				},
+				MarkdownDescription: "The fixed value for all the promotion codes",
+			},
+			// computed
+			"create_date": schema.Int64Attribute{
+				Computed:            true,
+				MarkdownDescription: "The creation date",
+			},
+			// computed
+			"update_date": schema.Int64Attribute{
+				Computed:            true,
+				MarkdownDescription: "The update date",
+			},
+			// computed: this value determines the nullability of `use_allowed` field
 			"unlimited_uses": schema.BoolAttribute{
 				Computed:            true,
 				MarkdownDescription: "Whether to allow unlimited uses",
-			},
-			"discount_amount": schema.Float64Attribute{
-				Computed:            true,
-				MarkdownDescription: "The promotion discount",
-			},
-			"promotion_id": schema.StringAttribute{
-				Computed:            true,
-				MarkdownDescription: "The promotion ID",
-			},
-			"promotion_code_prefix": schema.StringAttribute{
-				Optional:            true,
-				Computed:            true,
-				MarkdownDescription: "The prefix for all the codes",
-			},
-			"create_by": schema.StringAttribute{
-				Computed:            true,
-				MarkdownDescription: "The user who created the object",
-			},
-			"uses_allowed": schema.Int32Attribute{
-				Optional:            true,
-				Computed:            true,
-				MarkdownDescription: "The number of uses allowed by the promotion",
-			},
-			"discount": schema.StringAttribute{
-				Computed:            true,
-				MarkdownDescription: "The promotion discount, formatted",
 			},
 		},
 	}
@@ -314,14 +314,10 @@ func (r *PromotionResource) Read(ctx context.Context, req resource.ReadRequest, 
 	}
 
 	data := result.Promotion
-	//state.Discount = types.StringValue(data.Discount)
 	state.UsesAllowed = types.Int32PointerValue(data.UsesAllowed)
 	state.PromotionCodePrefix = types.StringPointerValue(data.PromotionCodePrefix)
 	state.PromotionId = types.StringValue(data.PromotionId)
-	state.DiscountAmount = types.Float64Value(data.DiscountAmount)
-	state.UnlimitedUses = types.BoolValue(data.UnlimitedUses)
 	state.PercentageDiscount = types.Float64Value(data.PercentageDiscount)
-	//state.Status = types.StringValue(string(data.Status))
 	state.NewCustomersOnly = types.BoolValue(data.NewCustomersOnly)
 	fixedDiscountListElements := []PromotionFixedDiscountResourceModel{}
 	for _, element := range data.FixedDiscountList {
@@ -331,17 +327,17 @@ func (r *PromotionResource) Read(ctx context.Context, req resource.ReadRequest, 
 	state.EndDate = types.Int64Value(int64(data.EndDate))
 	state.NeverAllowZero = types.BoolValue(data.NeverAllowZero)
 	state.ApplyToAllBillingPeriods = types.BoolValue(data.ApplyToAllBillingPeriods)
-	//state.UpdateDate = types.Int64Value(int64(data.UpdateDate))
-	state.DiscountCurrency = types.StringValue(data.DiscountCurrency)
 	state.CanBeAppliedOnRenewal = types.BoolValue(data.CanBeAppliedOnRenewal)
 	state.BillingPeriodLimit = types.Int32Value(data.BillingPeriodLimit)
 	state.FixedPromotionCode = types.StringPointerValue(data.FixedPromotionCode)
 	state.Aid = types.StringValue(data.Aid)
-	//state.CreateDate = types.Int64Value(int64(data.CreateDate))
 	state.TermDependencyType = types.StringValue(string(data.TermDependencyType))
 	state.StartDate = types.Int64Value(int64(data.StartDate))
 	state.Name = types.StringValue(data.Name)
 	state.DiscountType = types.StringValue(string(data.DiscountType))
+	state.CreateDate = types.Int64Value(int64(data.CreateDate))
+	state.UpdateDate = types.Int64Value(int64(data.UpdateDate))
+
 	resp.Diagnostics.Append(resp.State.Set(ctx, &state)...)
 }
 func (r *PromotionResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
@@ -350,9 +346,36 @@ func (r *PromotionResource) Create(ctx context.Context, req resource.CreateReque
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	response, err := r.client.PostPublisherPromotionCreateWithFormdataBody(ctx, piano_publisher.PostPublisherPromotionCreateFormdataRequestBody{
-		Aid: state.Aid.ValueString(),
-	})
+	request := piano_publisher.PostPublisherPromotionCreateFormdataRequestBody{
+		Aid:                   state.Aid.ValueString(),
+		Name:                  state.Name.ValueString(),
+		BillingPeriodLimit:    state.BillingPeriodLimit.ValueInt32Pointer(),
+		CanBeAppliedOnRenewal: state.ApplyToAllBillingPeriods.ValueBoolPointer(),
+		DiscountType:          (*piano_publisher.PostPublisherPromotionCreateRequestDiscountType)(state.DiscountType.ValueStringPointer()),
+		NeverAllowZero:        state.NeverAllowZero.ValueBoolPointer(),
+		NewCustomersOnly:      *state.NewCustomersOnly.ValueBoolPointer(),
+		PromotionCodePrefix:   state.PromotionCodePrefix.ValueStringPointer(),
+		TermDependencyType:    (*piano_publisher.PostPublisherPromotionCreateRequestTermDependencyType)(state.TermDependencyType.ValueStringPointer()),
+		UsesAllowed:           state.UsesAllowed.ValueInt32Pointer(),
+		FixedPromotionCode:    state.FixedPromotionCode.ValueStringPointer(),
+	}
+	if state.UsesAllowed.IsNull() {
+		t := true
+		request.UnlimitedUses = &t
+	}
+	if state.StartDate.ValueInt64Pointer() != nil {
+		date := int(state.StartDate.ValueInt64())
+		request.StartDate = &date
+	}
+	if state.EndDate.ValueInt64Pointer() != nil {
+		date := int(state.EndDate.ValueInt64())
+		request.EndDate = &date
+	}
+	if state.PercentageDiscount.ValueFloat64Pointer() != nil {
+		discount := float32(state.PercentageDiscount.ValueFloat64())
+		request.PercentageDiscount = &discount
+	}
+	response, err := r.client.PostPublisherPromotionCreateWithFormdataBody(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to fetch promotion, got error: %s", err))
 		return
@@ -370,14 +393,11 @@ func (r *PromotionResource) Create(ctx context.Context, req resource.CreateReque
 	}
 
 	data := result.Promotion
-	// state.Discount = types.StringValue(data.Discount)
 	state.UsesAllowed = types.Int32PointerValue(data.UsesAllowed)
 	state.PromotionCodePrefix = types.StringPointerValue(data.PromotionCodePrefix)
 	state.PromotionId = types.StringValue(data.PromotionId)
-	state.DiscountAmount = types.Float64Value(data.DiscountAmount)
 	state.UnlimitedUses = types.BoolValue(data.UnlimitedUses)
 	state.PercentageDiscount = types.Float64Value(data.PercentageDiscount)
-	// state.Status = types.StringValue(string(data.Status))
 	state.NewCustomersOnly = types.BoolValue(data.NewCustomersOnly)
 	fixedDiscountListElements := []PromotionFixedDiscountResourceModel{}
 	for _, element := range data.FixedDiscountList {
@@ -387,29 +407,58 @@ func (r *PromotionResource) Create(ctx context.Context, req resource.CreateReque
 	state.EndDate = types.Int64Value(int64(data.EndDate))
 	state.NeverAllowZero = types.BoolValue(data.NeverAllowZero)
 	state.ApplyToAllBillingPeriods = types.BoolValue(data.ApplyToAllBillingPeriods)
-	// state.UpdateDate = types.Int64Value(int64(data.UpdateDate))
-	state.DiscountCurrency = types.StringValue(data.DiscountCurrency)
+
 	state.CanBeAppliedOnRenewal = types.BoolValue(data.CanBeAppliedOnRenewal)
 	state.BillingPeriodLimit = types.Int32Value(data.BillingPeriodLimit)
 	state.FixedPromotionCode = types.StringPointerValue(data.FixedPromotionCode)
 	state.Aid = types.StringValue(data.Aid)
-	// state.CreateDate = types.Int64Value(int64(data.CreateDate))
 	state.TermDependencyType = types.StringValue(string(data.TermDependencyType))
 	state.StartDate = types.Int64Value(int64(data.StartDate))
 	state.Name = types.StringValue(data.Name)
 	state.DiscountType = types.StringValue(string(data.DiscountType))
+	state.CreateDate = types.Int64Value(int64(data.CreateDate))
+	state.UpdateDate = types.Int64Value(int64(data.UpdateDate))
 	resp.Diagnostics.Append(resp.State.Set(ctx, &state)...)
 }
 func (r *PromotionResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
 	var state PromotionResourceModel
-	resp.Diagnostics.Append(req.State.Get(ctx, &state)...)
+	resp.Diagnostics.Append(req.Plan.Get(ctx, &state)...)
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	response, err := r.client.PostPublisherPromotionUpdateWithFormdataBody(ctx, piano_publisher.PostPublisherPromotionUpdateFormdataRequestBody{
-		Aid:         state.Aid.ValueString(),
-		PromotionId: state.PromotionId.ValueString(),
-	})
+	tflog.Info(ctx, fmt.Sprintf("DEBUG!!! %#v", state))
+	request := piano_publisher.PostPublisherPromotionUpdateFormdataRequestBody{
+		Aid:                      state.Aid.ValueString(),
+		PromotionId:              state.PromotionId.ValueString(),
+		Name:                     state.Name.ValueString(),
+		ApplyToAllBillingPeriods: state.ApplyToAllBillingPeriods.ValueBoolPointer(),
+		CanBeAppliedOnRenewal:    state.CanBeAppliedOnRenewal.ValueBoolPointer(),
+		NeverAllowZero:           state.NeverAllowZero.ValueBoolPointer(),
+		UsesAllowed:              state.UsesAllowed.ValueInt32Pointer(),
+		BillingPeriodLimit:       state.BillingPeriodLimit.ValueInt32Pointer(),
+		DiscountType:             piano_publisher.PostPublisherPromotionUpdateRequestDiscountType(state.DiscountType.ValueString()),
+		TermDependencyType:       (*piano_publisher.PostPublisherPromotionUpdateRequestTermDependencyType)(state.TermDependencyType.ValueStringPointer()),
+		FixedPromotionCode:       state.FixedPromotionCode.ValueStringPointer(),
+		NewCustomersOnly:         state.NewCustomersOnly.ValueBoolPointer(),
+		PromotionCodePrefix:      state.PromotionCodePrefix.ValueStringPointer(),
+	}
+	if state.UsesAllowed.IsNull() {
+		t := true
+		request.UnlimitedUses = &t
+	}
+	if state.StartDate.ValueInt64Pointer() != nil {
+		date := int(state.StartDate.ValueInt64())
+		request.StartDate = &date
+	}
+	if state.EndDate.ValueInt64Pointer() != nil {
+		date := int(state.EndDate.ValueInt64())
+		request.EndDate = &date
+	}
+	if state.PercentageDiscount.ValueFloat64Pointer() != nil {
+		discount := float32(state.PercentageDiscount.ValueFloat64())
+		request.PercentageDiscount = &discount
+	}
+	response, err := r.client.PostPublisherPromotionUpdateWithFormdataBody(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to fetch promotion, got error: %s", err))
 		return
@@ -427,14 +476,11 @@ func (r *PromotionResource) Update(ctx context.Context, req resource.UpdateReque
 	}
 
 	data := result.Promotion
-	// state.Discount = types.StringValue(data.Discount)
 	state.UsesAllowed = types.Int32PointerValue(data.UsesAllowed)
 	state.PromotionCodePrefix = types.StringPointerValue(data.PromotionCodePrefix)
 	state.PromotionId = types.StringValue(data.PromotionId)
-	state.DiscountAmount = types.Float64Value(data.DiscountAmount)
 	state.UnlimitedUses = types.BoolValue(data.UnlimitedUses)
 	state.PercentageDiscount = types.Float64Value(data.PercentageDiscount)
-	// state.Status = types.StringValue(string(data.Status))
 	state.NewCustomersOnly = types.BoolValue(data.NewCustomersOnly)
 	fixedDiscountListElements := []PromotionFixedDiscountResourceModel{}
 	for _, element := range data.FixedDiscountList {
@@ -444,17 +490,16 @@ func (r *PromotionResource) Update(ctx context.Context, req resource.UpdateReque
 	state.EndDate = types.Int64Value(int64(data.EndDate))
 	state.NeverAllowZero = types.BoolValue(data.NeverAllowZero)
 	state.ApplyToAllBillingPeriods = types.BoolValue(data.ApplyToAllBillingPeriods)
-	// state.UpdateDate = types.Int64Value(int64(data.UpdateDate))
-	state.DiscountCurrency = types.StringValue(data.DiscountCurrency)
 	state.CanBeAppliedOnRenewal = types.BoolValue(data.CanBeAppliedOnRenewal)
 	state.BillingPeriodLimit = types.Int32Value(data.BillingPeriodLimit)
 	state.FixedPromotionCode = types.StringPointerValue(data.FixedPromotionCode)
 	state.Aid = types.StringValue(data.Aid)
-	// state.CreateDate = types.Int64Value(int64(data.CreateDate))
 	state.TermDependencyType = types.StringValue(string(data.TermDependencyType))
 	state.StartDate = types.Int64Value(int64(data.StartDate))
 	state.Name = types.StringValue(data.Name)
 	state.DiscountType = types.StringValue(string(data.DiscountType))
+	state.CreateDate = types.Int64Value(int64(data.CreateDate))
+	state.UpdateDate = types.Int64Value(int64(data.UpdateDate))
 	resp.Diagnostics.Append(resp.State.Set(ctx, &state)...)
 }
 func (r *PromotionResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
@@ -477,6 +522,30 @@ func (r *PromotionResource) Delete(ctx context.Context, req resource.DeleteReque
 		return
 	}
 }
-func (r *PromotionResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+func (*PromotionResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+	promotionId, err := PromotionIdFromString(req.ID)
+	if err != nil {
+		resp.Diagnostics.AddError("Invalid Resource resource id", fmt.Sprintf("Unable to parse promotion id, got error: %s", err))
+		return
+	}
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("aid"), promotionId.Aid)...)
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("promotion_id"), promotionId.PromotionId)...)
+}
 
+// PromotionId represents a piano.io promotion resource identifier in "{aid}/{promotion_id}" format.
+type PromotionId struct {
+	Aid         string
+	PromotionId string
+}
+
+func PromotionIdFromString(input string) (*PromotionId, error) {
+	parts := strings.Split(input, "/")
+	if len(parts) != 2 {
+		return nil, errors.New("resource resource id must be in {aid}/{rid} format")
+	}
+	data := PromotionId{
+		Aid:         parts[0],
+		PromotionId: parts[1],
+	}
+	return &data, nil
 }
