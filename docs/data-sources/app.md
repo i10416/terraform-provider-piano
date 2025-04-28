@@ -3,12 +3,12 @@
 page_title: "piano_app Data Source - piano"
 subcategory: ""
 description: |-
-  piano app source
+  piano app source. This data source is used to get the app details.
 ---
 
 # piano_app (Data Source)
 
-piano app source
+piano app source. This data source is used to get the app details.
 
 ## Example Usage
 

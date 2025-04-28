@@ -3,12 +3,12 @@
 page_title: "piano_licensee Data Source - piano"
 subcategory: ""
 description: |-
-  Licensee data source
+  Licensee data source. Licensee is a company that has access to resources in the app.
 ---
 
 # piano_licensee (Data Source)
 
-Licensee data source
+Licensee data source. Licensee is a company that has access to resources in the app.
 
 ## Example Usage
 

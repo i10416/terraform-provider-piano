@@ -5092,7 +5092,7 @@ type AppFeatures struct {
 
 // AppFeaturesResult defines model for AppFeaturesResult.
 type AppFeaturesResult struct {
-	AppFeatures AppFeatures `json:"AppFeatures"`
+	AppFeatures *AppFeatures `json:"app_features,omitempty"`
 }
 
 // AppResourceCount defines model for AppResourceCount.
@@ -5776,7 +5776,7 @@ type ExperienceMetadata struct {
 
 // ExperienceMetadataArrayResult defines model for ExperienceMetadataArrayResult.
 type ExperienceMetadataArrayResult struct {
-	ExperienceMetadata []ExperienceMetadata `json:"ExperienceMetadata"`
+	Data *[]ExperienceMetadata `json:"data,omitempty"`
 }
 
 // Export defines model for Export.
@@ -5905,7 +5905,7 @@ type ExternalTerm struct {
 	// EvtGooglePlayProductId Google Play's product ID
 	EvtGooglePlayProductId *string `json:"evt_google_play_product_id"`
 
-	// EvtGracePeriod The External API grace period
+	// EvtGracePeriod The External API grace period for Apple Subscribing Inside the App feature
 	EvtGracePeriod int32 `json:"evt_grace_period"`
 
 	// EvtItunesBundleId iTunes's bundle ID
@@ -14877,7 +14877,7 @@ type Promotion struct {
 	FixedDiscountList []PromotionFixedDiscount `json:"fixed_discount_list"`
 
 	// FixedPromotionCode The fixed value for all the promotion codes
-	FixedPromotionCode string `json:"fixed_promotion_code"`
+	FixedPromotionCode *string `json:"fixed_promotion_code"`
 
 	// Name The promotion name
 	Name string `json:"name"`
@@ -14892,7 +14892,7 @@ type Promotion struct {
 	PercentageDiscount float64 `json:"percentage_discount"`
 
 	// PromotionCodePrefix The prefix for all the codes
-	PromotionCodePrefix string `json:"promotion_code_prefix"`
+	PromotionCodePrefix *string `json:"promotion_code_prefix"`
 
 	// PromotionId The promotion ID
 	PromotionId string `json:"promotion_id"`
@@ -14919,7 +14919,7 @@ type Promotion struct {
 	Uses int32 `json:"uses"`
 
 	// UsesAllowed The number of uses allowed by the promotion
-	UsesAllowed int32 `json:"uses_allowed"`
+	UsesAllowed *int32 `json:"uses_allowed"`
 }
 
 // PromotionDiscountType The promotion discount type
@@ -14958,7 +14958,7 @@ type PromotionFixedDiscountResult struct {
 
 // PromotionResult defines model for PromotionResult.
 type PromotionResult struct {
-	Promotion Promotion `json:"Promotion"`
+	Promotion *Promotion `json:"promotion,omitempty"`
 }
 
 // RedemptionPage defines model for RedemptionPage.
@@ -15949,12 +15949,12 @@ type TermConversionDataPlatform string
 
 // TermConversionDataResult defines model for TermConversionDataResult.
 type TermConversionDataResult struct {
-	TermConversionData TermConversionData `json:"TermConversionData"`
+	ConversionData *TermConversionData `json:"conversion_data,omitempty"`
 }
 
 // TermConversionResult defines model for TermConversionResult.
 type TermConversionResult struct {
-	TermConversion TermConversion `json:"TermConversion"`
+	Conversion *TermConversion `json:"conversion,omitempty"`
 }
 
 // TermConversionSubscription defines model for TermConversionSubscription.

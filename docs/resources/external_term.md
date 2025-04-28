@@ -3,12 +3,12 @@
 page_title: "piano_external_term Resource - piano"
 subcategory: ""
 description: |-
-  ExternalTerm resource
+  ExternalTerm resource. External term is a term that is created by the external API.
 ---
 
 # piano_external_term (Resource)
 
-ExternalTerm resource
+ExternalTerm resource. External term is a term that is created by the external API.
 
 ## Example Usage
 

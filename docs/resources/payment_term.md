@@ -3,12 +3,12 @@
 page_title: "piano_payment_term Resource - piano"
 subcategory: ""
 description: |-
-  Payment Term resource
+  Payment Term resource. Payment term is a term that is used to create a payment.
 ---
 
 # piano_payment_term (Resource)
 
-Payment Term resource
+Payment Term resource. Payment term is a term that is used to create a payment.
 
 ## Example Usage
 

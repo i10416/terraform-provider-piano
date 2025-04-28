@@ -120,6 +120,7 @@ func (p *PianoProvider) Resources(ctx context.Context) []func() resource.Resourc
 		NewContractResource,
 		NewPaymentTermResource,
 		NewExternalTermResource,
+		NewPromotionResource,
 	}
 }
 
@@ -135,6 +136,7 @@ func (p *PianoProvider) DataSources(ctx context.Context) []func() datasource.Dat
 		NewContractDataSource,
 		NewTermDataSource,
 		NewExternalTermDataSource,
+		NewPromotionDataSource,
 	}
 }
 

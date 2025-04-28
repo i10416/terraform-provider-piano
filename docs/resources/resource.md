@@ -3,12 +3,12 @@
 page_title: "piano_resource Resource - piano"
 subcategory: ""
 description: |-
-  Resource resource
+  Resource resource. This resource is used to create, update, and delete a resource.
 ---
 
 # piano_resource (Resource)
 
-Resource resource
+Resource resource. This resource is used to create, update, and delete a resource.
 
 ## Example Usage
 

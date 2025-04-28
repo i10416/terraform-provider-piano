@@ -3,12 +3,12 @@
 page_title: "piano_contract Resource - piano"
 subcategory: ""
 description: |-
-  Contract Resource
+  Contract Resource. This resource is used to create, update, and delete a contract.
 ---
 
 # piano_contract (Resource)
 
-Contract Resource
+Contract Resource. This resource is used to create, update, and delete a contract.
 
 
 
