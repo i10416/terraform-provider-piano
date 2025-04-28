@@ -39,11 +39,11 @@ terraform <cmd>
 In project root:
 
 ```sh
-go tool github.com/hashicorp/terraform-plugin-docs/cmd/tfplugindocs generate --provider-dir . -provider-name piano
+go tool tfplugindocs generate --provider-dir . -provider-name piano
 ```
 
 ### Misc
 
 ```sh
-go tool github.com/hashicorp/copywrite headers -d . --config ./.copywrite.hcl
+go tool copywrite headers -d . --config ./.copywrite.hcl
 ```

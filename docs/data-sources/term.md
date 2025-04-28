@@ -3,12 +3,12 @@
 page_title: "piano_term Data Source - piano"
 subcategory: ""
 description: |-
-  Term datasource
+  Term datasource. Term is a pair of price and schedule that is a part of offers.
 ---
 
 # piano_term (Data Source)
 
-Term datasource
+Term datasource. Term is a pair of price and schedule that is a part of offers.
 
 
 

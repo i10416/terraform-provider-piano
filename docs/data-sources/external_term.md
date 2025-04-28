@@ -3,12 +3,12 @@
 page_title: "piano_external_term Data Source - piano"
 subcategory: ""
 description: |-
-  ExternalTerm datasource
+  ExternalTerm datasource. External term is a term that is created by the external API.
 ---
 
 # piano_external_term (Data Source)
 
-ExternalTerm datasource
+ExternalTerm datasource. External term is a term that is created by the external API.
 
 
 

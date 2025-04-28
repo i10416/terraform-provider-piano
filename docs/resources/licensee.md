@@ -3,12 +3,12 @@
 page_title: "piano_licensee Resource - piano"
 subcategory: ""
 description: |-
-  Licensee resource
+  Licensee resource. Licensee is a company that has access to resources in the app.
 ---
 
 # piano_licensee (Resource)
 
-Licensee resource
+Licensee resource. Licensee is a company that has access to resources in the app.
 
 ## Example Usage
 

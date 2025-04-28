@@ -3,12 +3,12 @@
 page_title: "piano_contract Data Source - piano"
 subcategory: ""
 description: |-
-  Contract data source
+  Contract data source. This data source is used to get the contract details.
 ---
 
 # piano_contract (Data Source)
 
-Contract data source
+Contract data source. This data source is used to get the contract details.
 
 ## Example Usage
 
