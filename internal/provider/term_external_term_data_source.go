@@ -48,7 +48,7 @@ func (r *ExternalTermDataSource) Metadata(ctx context.Context, req datasource.Me
 }
 func (*ExternalTermDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "ExternalTerm datasource",
+		MarkdownDescription: "ExternalTerm datasource. External term is a term that is created by the external API.",
 		Attributes: map[string]schema.Attribute{
 			"term_id": schema.StringAttribute{
 				Required:            true,

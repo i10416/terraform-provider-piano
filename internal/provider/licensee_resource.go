@@ -66,7 +66,7 @@ func (r *LicenseeResource) Metadata(ctx context.Context, req resource.MetadataRe
 
 func (r *LicenseeResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "Licensee resource",
+		MarkdownDescription: "Licensee resource. Licensee is a company that has access to resources in the app.",
 		Attributes: map[string]schema.Attribute{
 			"aid": schema.StringAttribute{
 				MarkdownDescription: "piano application id",

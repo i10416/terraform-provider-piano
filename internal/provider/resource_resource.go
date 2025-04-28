@@ -66,7 +66,7 @@ func (r *ResourceResource) Metadata(ctx context.Context, req resource.MetadataRe
 
 func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "Resource resource",
+		MarkdownDescription: "Resource resource. This resource is used to create, update, and delete a resource.",
 		Attributes: map[string]schema.Attribute{
 			"aid": schema.StringAttribute{
 				MarkdownDescription: "The application ID",

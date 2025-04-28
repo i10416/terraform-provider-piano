@@ -94,7 +94,7 @@ func (*ContractResource) Metadata(ctx context.Context, req resource.MetadataRequ
 
 func (*ContractResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "Contract Resource",
+		MarkdownDescription: "Contract Resource. This resource is used to create, update, and delete a contract.",
 		Attributes: map[string]schema.Attribute{
 			"aid": schema.StringAttribute{
 				Required:            true,
