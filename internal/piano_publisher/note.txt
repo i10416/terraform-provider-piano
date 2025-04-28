@@ -1,2 +1,14 @@
-Golang default JSON codec matches fields in case-insensitive tay, but we should not depend on this behavior.
+When a request to piano API succeeds, it returns the value described in docs.piano.io/api as a field value in a response body（not toplevel object!）.
+To make matters worse, the response field has inconsistent naming convention, that makes it difficult to fully automatic code generation.
+In addition, the API spec is not consistent with nullability and undefined-ness of actual response fields.
+
+There is some patterns, but remember this is not always the case.
+
+- field name for an array of primitive types is `data`
+- if the API returns a resource consisting of single word such as `Term`, `Promotion` or `Contract`, 
+field name is likely lowercase value of the resource name.
+- if the resource name consists of two or more words, field name is likely snakecase value of the resource name.
+- bool values are filled with false if absent.
+
+It does not always result in error when field name does not exactly match because Golang default JSON codec matches fields in a case-insensitive tay, but we should not depend on this behavior.
 https://stackoverflow.com/questions/49006073/json-unmarshal-struct-case-sensitively
