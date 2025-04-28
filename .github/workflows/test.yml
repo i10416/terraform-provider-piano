@@ -3,10 +3,11 @@ name: Tests
 
 on:
   pull_request:
-    paths-ignore:
-      - 'README.md'
-      - "LICENSE"
-  push:
+    branches: [master, main]
+    types:
+      - opened
+      - synchronize
+      - reopened
     paths-ignore:
       - 'README.md'
       - "LICENSE"
