@@ -14797,7 +14797,7 @@ type PromoCode struct {
 	Deleted bool `json:"deleted"`
 
 	// LastOriginalPrice The promo code last original price
-	LastOriginalPrice *string `json:"last_original_price,omitempty"`
+	LastOriginalPrice *string `json:"last_original_price"`
 
 	// PromoCodeId The promo code ID
 	PromoCodeId string `json:"promo_code_id"`

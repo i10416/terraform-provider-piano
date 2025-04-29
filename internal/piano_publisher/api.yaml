@@ -24943,7 +24943,7 @@ components:
         - create_by
         - create_date
         - deleted
-        # - last_original_price
+        - last_original_price
         - promo_code_id
         - promotion_id
         # - reserve_date
@@ -25011,6 +25011,7 @@ components:
           description: Whether the object is deleted
         last_original_price:
           type: string
+          nullable: true
           description: The promo code last original price
     Promotion:
       required:
