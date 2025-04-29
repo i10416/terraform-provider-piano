@@ -57,7 +57,17 @@ go install .
 This will install go binary under GOBIN.
 
 #### Running local provider implementation
-In example/provider-interactive-debugging:
+Now, terraform picks up the local provider implementation when you run `terraform` command.
+
+```tf
+terraform {
+  required_providers {
+    piano = {
+      source = "hashicorp.com/i10416/piano"
+    }
+  }
+}
+```
 
 ```sh
 terraform <cmd>
