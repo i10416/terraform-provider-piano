@@ -75,26 +75,18 @@ terraform <cmd>
 
 For more details, check https://developer.hashicorp.com/terraform/tutorials/providers-plugin-framework/providers-plugin-framework-provider#prepare-terraform-for-local-provider-install
 
-#### Generating piano SDK for Go
+### Code and Docs Generation
 
-This repository contains internal piano publisher SDK generated from piano.io OpenAPI specification with some modification.
+This project uses some tools to generate Terraform provider docs and
+copyright headers.
 
-Run the following command to keep generated SDK in sync with OpenAPI spec.
+This project also contains internal piano publisher SDK generated from piano.io OpenAPI specification with some modification.
+
+Run the following command in project root
+- to keep generated SDK in sync with OpenAPI spec
+- to generate terraform docs and copyright headers
 
 ```sh
 go generate ./.
 ```
 
-### Docs
-
-In project root:
-
-```sh
-go tool tfplugindocs generate --provider-dir . -provider-name piano
-```
-
-### Misc
-
-```sh
-go tool copywrite headers -d . --config ./.copywrite.hcl
-```

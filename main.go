@@ -1,6 +1,8 @@
 // Copyright (c) Yoichiro Ito <contact.110416@gmail.com>
 // SPDX-License-Identifier: MPL-2.0
 
+//go:generate go tool tfplugindocs generate --provider-dir . -provider-name piano
+//go:generate go tool copywrite headers -d . --config ./.copywrite.hcl
 package main
 
 import (
