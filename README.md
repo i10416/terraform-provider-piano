@@ -30,16 +30,49 @@ For more details, visit https://registry.terraform.io/providers/i10416/piano/lat
 
 ### Debugging
 
+#### Setup .terraform.tfrc
+
+Create `.terraform.tfrc` file so that terraform can lookup local provider implementation.
+
+```
+provider_installation {
+
+  dev_overrides {
+      "hashicorp.com/i10416/piano" = "$GOBIN"
+  }
+
+  direct {}
+}
+
+```
+
+#### Install go binary
+
 In workspace root:
 
 ```sh
 go install .
 ```
 
+This will install go binary under GOBIN.
+
+#### Running local provider implementation
 In example/provider-interactive-debugging:
 
 ```sh
 terraform <cmd>
+```
+
+For more details, check https://developer.hashicorp.com/terraform/tutorials/providers-plugin-framework/providers-plugin-framework-provider#prepare-terraform-for-local-provider-install
+
+#### Generating piano SDK for Go
+
+This repository contains internal piano publisher SDK generated from piano.io OpenAPI specification with some modification.
+
+Run the following command to keep generated SDK in sync with OpenAPI spec.
+
+```sh
+go generate ./.
 ```
 
 ### Docs
