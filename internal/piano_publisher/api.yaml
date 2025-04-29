@@ -8346,6 +8346,7 @@ paths:
         required: false
       responses:
         '200':
+          required: true
           description: successful operation
           content:
             application/json:
@@ -33320,10 +33321,10 @@ components:
       additionalProperties: false
     ConsentArrayResult:
       required:
-        - Consent
+        - Consents
       type: object
       properties:
-        Consent:
+        Consents:
           type: array
           items:
             $ref: '#/components/schemas/Consent'
@@ -33903,10 +33904,10 @@ components:
       additionalProperties: false
     TeamMemberArrayResult:
       required:
-        - TeamMember
+        - team_members
       type: object
       properties:
-        TeamMember:
+        team_members:
           type: array
           items:
             $ref: '#/components/schemas/TeamMember'
