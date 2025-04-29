@@ -24937,16 +24937,16 @@ components:
     PromoCode:
       required:
         - assigned_email
-        - claimed_date
-        - claimed_user
+        # - claimed_date
+        # - claimed_user
         - code
         - create_by
         - create_date
         - deleted
-        - last_original_price
+        # - last_original_price
         - promo_code_id
         - promotion_id
-        - reserve_date
+        # - reserve_date
         - state
         - state_value
         - update_by
@@ -24964,6 +24964,7 @@ components:
           description: The promo code itself
         assigned_email:
           type: string
+          nullable: true
           description: The assigned email
         reserve_date:
           type: integer
@@ -29752,16 +29753,16 @@ components:
     User:
       required:
         - create_date
-        - custom_fields
+        # - custom_fields
         - display_name
         - email
         - first_name
         - image1
-        - last_login
+        # - last_login
         - last_name
-        - last_visit
+        # - last_visit
         - personal_name
-        - reset_password_email_sent
+        # - reset_password_email_sent
         - uid
       type: object
       properties:
@@ -29782,6 +29783,7 @@ components:
           description: The user's ID
         image1:
           type: string
+          nullable: true
           description: The user's profile image
         create_date:
           type: integer
@@ -33170,6 +33172,7 @@ components:
         description:
           type: string
           description: The webhook status description
+          example: "Webhooks processing normally"
     ZuoraConfiguration:
       required:
         - api_key
@@ -33716,17 +33719,17 @@ components:
       additionalProperties: false
     PromoCodeArrayResult:
       required:
-        - PromoCode
+        - data
       type: object
       properties:
-        PromoCode:
+        data:
           type: array
           items:
             $ref: '#/components/schemas/PromoCode'
       additionalProperties: false
     PromotionResult:
       required:
-        - Promotion
+        - promotion
       type: object
       properties:
         promotion:
@@ -33742,20 +33745,20 @@ components:
       additionalProperties: false
     PromotionArrayResult:
       required:
-        - Promotion
+        - promotions
       type: object
       properties:
-        Promotion:
+        promotions:
           type: array
           items:
             $ref: '#/components/schemas/Promotion'
       additionalProperties: false
     ResourceArrayResult:
       required:
-        - Resource
+        - resources
       type: object
       properties:
-        Resource:
+        resources:
           type: array
           items:
             $ref: '#/components/schemas/Resource'
@@ -33810,10 +33813,10 @@ components:
       additionalProperties: false
     UserArrayResult:
       required:
-        - User
+        - users
       type: object
       properties:
-        User:
+        users:
           type: array
           items:
             $ref: '#/components/schemas/User'
@@ -34166,18 +34169,18 @@ components:
       additionalProperties: false
     WebhookSettingsResult:
       required:
-        - WebhookSettings
+        - webhook_settings
       type: object
       properties:
-        WebhookSettings:
+        webhook_settings:
           $ref: '#/components/schemas/WebhookSettings'
       additionalProperties: false
     WebhookStatusResult:
       required:
-        - WebhookStatus
+        - webhook_status
       type: object
       properties:
-        WebhookStatus:
+        webhook_status:
           $ref: '#/components/schemas/WebhookStatus'
       additionalProperties: false
     PostPublisherConversionCustomCreateRequest:

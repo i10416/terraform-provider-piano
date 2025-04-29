@@ -14778,11 +14778,11 @@ type PostPublisherWebhookSettingsUpdateRequest struct {
 // PromoCode defines model for PromoCode.
 type PromoCode struct {
 	// AssignedEmail The assigned email
-	AssignedEmail string `json:"assigned_email"`
+	AssignedEmail *string `json:"assigned_email"`
 
 	// ClaimedDate The date when the promotion was claimed
-	ClaimedDate int  `json:"claimed_date"`
-	ClaimedUser User `json:"claimed_user"`
+	ClaimedDate *int  `json:"claimed_date,omitempty"`
+	ClaimedUser *User `json:"claimed_user,omitempty"`
 
 	// Code The promo code itself
 	Code string `json:"code"`
@@ -14797,7 +14797,7 @@ type PromoCode struct {
 	Deleted bool `json:"deleted"`
 
 	// LastOriginalPrice The promo code last original price
-	LastOriginalPrice string `json:"last_original_price"`
+	LastOriginalPrice *string `json:"last_original_price,omitempty"`
 
 	// PromoCodeId The promo code ID
 	PromoCodeId string `json:"promo_code_id"`
@@ -14806,7 +14806,7 @@ type PromoCode struct {
 	PromotionId string `json:"promotion_id"`
 
 	// ReserveDate The promo code reserve_date
-	ReserveDate int `json:"reserve_date"`
+	ReserveDate *int `json:"reserve_date,omitempty"`
 
 	// State The promo code state
 	State PromoCodeState `json:"state"`
@@ -14829,7 +14829,7 @@ type PromoCodeStateValue string
 
 // PromoCodeArrayResult defines model for PromoCodeArrayResult.
 type PromoCodeArrayResult struct {
-	PromoCode []PromoCode `json:"PromoCode"`
+	Data []PromoCode `json:"data"`
 }
 
 // PromoCodeResult defines model for PromoCodeResult.
@@ -14933,7 +14933,7 @@ type PromotionTermDependencyType string
 
 // PromotionArrayResult defines model for PromotionArrayResult.
 type PromotionArrayResult struct {
-	Promotion []Promotion `json:"Promotion"`
+	Promotions []Promotion `json:"promotions"`
 }
 
 // PromotionFixedDiscount defines model for PromotionFixedDiscount.
@@ -14958,7 +14958,7 @@ type PromotionFixedDiscountResult struct {
 
 // PromotionResult defines model for PromotionResult.
 type PromotionResult struct {
-	Promotion *Promotion `json:"promotion,omitempty"`
+	Promotion Promotion `json:"promotion"`
 }
 
 // RedemptionPage defines model for RedemptionPage.
@@ -15059,7 +15059,7 @@ type ResourceTypeLabel string
 
 // ResourceArrayResult defines model for ResourceArrayResult.
 type ResourceArrayResult struct {
-	Resource []Resource `json:"Resource"`
+	Resources []Resource `json:"resources"`
 }
 
 // ResourceDto defines model for ResourceDto.
@@ -16097,8 +16097,8 @@ type UpgradeOptionsVariant struct {
 // User defines model for User.
 type User struct {
 	// CreateDate The user creation date
-	CreateDate   int                                 `json:"create_date"`
-	CustomFields []map[string]map[string]interface{} `json:"custom_fields"`
+	CreateDate   int                                  `json:"create_date"`
+	CustomFields *[]map[string]map[string]interface{} `json:"custom_fields,omitempty"`
 
 	// DisplayName The user's display name
 	DisplayName string `json:"display_name"`
@@ -16110,22 +16110,22 @@ type User struct {
 	FirstName string `json:"first_name"`
 
 	// Image1 The user's profile image
-	Image1 string `json:"image1"`
+	Image1 *string `json:"image1"`
 
 	// LastLogin The last login stamp
-	LastLogin int `json:"last_login"`
+	LastLogin *int `json:"last_login,omitempty"`
 
 	// LastName The user's last name
 	LastName string `json:"last_name"`
 
 	// LastVisit The date of the user's last visit
-	LastVisit int `json:"last_visit"`
+	LastVisit *int `json:"last_visit,omitempty"`
 
 	// PersonalName The user's personal name. Name and surname ordered as per locale
 	PersonalName string `json:"personal_name"`
 
 	// ResetPasswordEmailSent Whether a reset password email is sent
-	ResetPasswordEmailSent bool `json:"reset_password_email_sent"`
+	ResetPasswordEmailSent *bool `json:"reset_password_email_sent,omitempty"`
 
 	// Uid The user's ID
 	Uid string `json:"uid"`
@@ -16246,7 +16246,7 @@ type UserAddressResult struct {
 
 // UserArrayResult defines model for UserArrayResult.
 type UserArrayResult struct {
-	User []User `json:"User"`
+	Users []User `json:"users"`
 }
 
 // UserBillingAddress defines model for UserBillingAddress.
@@ -17292,7 +17292,7 @@ type WebhookSettings struct {
 
 // WebhookSettingsResult defines model for WebhookSettingsResult.
 type WebhookSettingsResult struct {
-	WebhookSettings WebhookSettings `json:"WebhookSettings"`
+	WebhookSettings WebhookSettings `json:"webhook_settings"`
 }
 
 // WebhookStatus defines model for WebhookStatus.
@@ -17309,7 +17309,7 @@ type WebhookStatusStatus string
 
 // WebhookStatusResult defines model for WebhookStatusResult.
 type WebhookStatusResult struct {
-	WebhookStatus WebhookStatus `json:"WebhookStatus"`
+	WebhookStatus WebhookStatus `json:"webhook_status"`
 }
 
 // GetPublisherAdblockerGetParams defines parameters for GetPublisherAdblockerGet.
