@@ -429,7 +429,16 @@ func (r *ExternalTermResource) Create(ctx context.Context, req resource.CreateRe
 	state.ExternalApiSource = types.Int32Value(int32(data.ExternalApiSource))
 	state.Aid = types.StringValue(data.Aid)
 	state.SharedAccountCount = types.Int32PointerValue(data.SharedAccountCount)
-	state.EvtItunesProductId = types.StringValue(data.EvtItunesProductId)
+	if state.EvtItunesProductId.IsUnknown() && data.EvtItunesProductId == "" {
+		state.EvtItunesProductId = types.StringNull()
+	} else {
+		state.EvtItunesProductId = types.StringValue(data.EvtItunesProductId)
+	}
+	if state.EvtItunesBundleId.IsUnknown() && data.EvtItunesBundleId == "" {
+		state.EvtItunesBundleId = types.StringNull()
+	} else {
+		state.EvtItunesBundleId = types.StringValue(data.EvtItunesBundleId)
+	}
 	state.Name = types.StringValue(data.Name)
 
 	externalApiFormFieldsElements := []ExternalAPIFieldResourceModel{}
@@ -442,7 +451,6 @@ func (r *ExternalTermResource) Create(ctx context.Context, req resource.CreateRe
 		return
 	}
 	state.ExternalApiFormFields = ExternalAPIFieldResourceModelListValue{ListValue: listValue}
-	state.EvtItunesBundleId = types.StringValue(data.EvtItunesBundleId)
 	state.Description = types.StringValue(data.Description)
 	state.TermId = types.StringValue(data.TermId)
 	tflog.Info(ctx, fmt.Sprintf("complete creating resource %s(id: %s)", state.Name, state.TermId))
@@ -520,9 +528,17 @@ func (r *ExternalTermResource) Update(ctx context.Context, req resource.UpdateRe
 	}
 	state.ExternalApiFormFields = ExternalAPIFieldResourceModelListValue{ListValue: listValue}
 	state.SharedAccountCount = types.Int32PointerValue(data.SharedAccountCount)
-	state.EvtItunesProductId = types.StringValue(data.EvtItunesProductId)
+	if state.EvtItunesProductId.IsUnknown() && data.EvtItunesProductId == "" {
+		state.EvtItunesProductId = types.StringNull()
+	} else {
+		state.EvtItunesProductId = types.StringValue(data.EvtItunesProductId)
+	}
+	if state.EvtItunesBundleId.IsUnknown() && data.EvtItunesBundleId == "" {
+		state.EvtItunesBundleId = types.StringNull()
+	} else {
+		state.EvtItunesBundleId = types.StringValue(data.EvtItunesBundleId)
+	}
 	state.Name = types.StringValue(data.Name)
-	state.EvtItunesBundleId = types.StringValue(data.EvtItunesBundleId)
 	state.Description = types.StringValue(data.Description)
 	tflog.Info(ctx, fmt.Sprintf("complete updating resource %s(id: %s)", state.Name, state.TermId))
 
@@ -585,9 +601,17 @@ func (r *ExternalTermResource) Read(ctx context.Context, req resource.ReadReques
 	}
 	state.ExternalApiFormFields = ExternalAPIFieldResourceModelListValue{ListValue: listValue}
 	state.SharedAccountCount = types.Int32PointerValue(data.SharedAccountCount)
-	state.EvtItunesProductId = types.StringValue(data.EvtItunesProductId)
+	if state.EvtItunesProductId.IsNull() && data.EvtItunesProductId == "" {
+		state.EvtItunesProductId = types.StringNull()
+	} else {
+		state.EvtItunesProductId = types.StringValue(data.EvtItunesProductId)
+	}
+	if state.EvtItunesBundleId.IsNull() && data.EvtItunesBundleId == "" {
+		state.EvtItunesBundleId = types.StringNull()
+	} else {
+		state.EvtItunesBundleId = types.StringValue(data.EvtItunesBundleId)
+	}
 	state.Name = types.StringValue(data.Name)
-	state.EvtItunesBundleId = types.StringValue(data.EvtItunesBundleId)
 	state.Description = types.StringValue(data.Description)
 	tflog.Trace(ctx, "read a resource")
 
