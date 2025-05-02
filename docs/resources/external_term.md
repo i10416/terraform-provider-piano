@@ -53,14 +53,12 @@ resource "piano_external_term" "sample" {
 
 ### Read-Only
 
-- `collect_address` (Boolean) Whether to collect an address for this term
 - `create_date` (Number) The creation date
 - `external_api_form_fields` (Attributes List) (see [below for nested schema](#nestedatt--external_api_form_fields))
 - `external_api_name` (String) The name of the external API configuration
 - `external_api_source` (Number) The source of the external API configuration
 - `term_id` (String) The term ID
 - `type` (String) The term type
-- `type_name` (String) The term type name
 - `update_date` (Number) The update date
 
 <a id="nestedatt--resource"></a>

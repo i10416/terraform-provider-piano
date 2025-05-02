@@ -39,28 +39,27 @@ type ExternalAPIFieldResourceModel struct {
 }
 
 type ExternalTermResourceModel struct {
-	Aid                      types.String                           `tfsdk:"aid"`                          // The application ID
-	CollectAddress           types.Bool                             `tfsdk:"collect_address"`              // Whether to collect an address for this term
-	CreateDate               types.Int64                            `tfsdk:"create_date"`                  // The creation date
-	Description              types.String                           `tfsdk:"description"`                  // The description of the term
-	EvtFixedTimeAccessPeriod types.Int32                            `tfsdk:"evt_fixed_time_access_period"` // The period to grant access for (in days)
-	EvtGooglePlayProductId   types.String                           `tfsdk:"evt_google_play_product_id"`   // Google Play's product ID
-	EvtGracePeriod           types.Int32                            `tfsdk:"evt_grace_period"`             // The External API grace period
-	EvtItunesBundleId        types.String                           `tfsdk:"evt_itunes_bundle_id"`         // iTunes's bundle ID
-	EvtItunesProductId       types.String                           `tfsdk:"evt_itunes_product_id"`        // iTunes's product ID
-	EvtVerificationPeriod    types.Int32                            `tfsdk:"evt_verification_period"`      // The <a href = "https://docs.piano.io/external-service-term/#externaltermverification">periodicity</a> (in seconds) of checking the EVT subscription with the external service
-	ExternalApiId            types.String                           `tfsdk:"external_api_id"`              // The ID of the external API configuration
-	ExternalApiFormFields    ExternalAPIFieldResourceModelListValue `tfsdk:"external_api_form_fields"`
-	ExternalApiName          types.String                           `tfsdk:"external_api_name"`   // The name of the external API configuration
-	ExternalApiSource        types.Int32                            `tfsdk:"external_api_source"` // The source of the external API configuration
-	Name                     types.String                           `tfsdk:"name"`                // The term name
-	Resource                 *ResourceResourceModel                 `tfsdk:"resource"`
-	SharedAccountCount       types.Int32                            `tfsdk:"shared_account_count"`  // The count of allowed shared-subscription accounts
-	SharedRedemptionUrl      types.String                           `tfsdk:"shared_redemption_url"` // The shared subscription redemption URL
-	TermId                   types.String                           `tfsdk:"term_id"`               // The term ID
-	Type                     types.String                           `tfsdk:"type"`                  // The term type
-	TypeName                 types.String                           `tfsdk:"type_name"`             // The term type name
-	UpdateDate               types.Int64                            `tfsdk:"update_date"`           // The update date
+	Aid                      types.String `tfsdk:"aid"`                          // The application ID
+	TermId                   types.String `tfsdk:"term_id"`                      // The term ID
+	ExternalApiId            types.String `tfsdk:"external_api_id"`              // The ID of the external API configuration
+	Name                     types.String `tfsdk:"name"`                         // The term name
+	Description              types.String `tfsdk:"description"`                  // The description of the term
+	EvtFixedTimeAccessPeriod types.Int32  `tfsdk:"evt_fixed_time_access_period"` // The period to grant access for (in days)
+	EvtGooglePlayProductId   types.String `tfsdk:"evt_google_play_product_id"`   // Google Play's product ID
+	EvtGracePeriod           types.Int32  `tfsdk:"evt_grace_period"`             // The External API grace period
+	EvtItunesBundleId        types.String `tfsdk:"evt_itunes_bundle_id"`         // iTunes's bundle ID
+	EvtItunesProductId       types.String `tfsdk:"evt_itunes_product_id"`        // iTunes's product ID
+	EvtVerificationPeriod    types.Int32  `tfsdk:"evt_verification_period"`      // The <a href = "https://docs.piano.io/external-service-term/#externaltermverification">periodicity</a> (in seconds) of checking the EVT subscription with the external service
+	SharedAccountCount       types.Int32  `tfsdk:"shared_account_count"`         // The count of allowed shared-subscription accounts
+	SharedRedemptionUrl      types.String `tfsdk:"shared_redemption_url"`        // The shared subscription redemption URL
+	// read only
+	ExternalApiName       types.String                           `tfsdk:"external_api_name"`   // The name of the external API configuration
+	ExternalApiSource     types.Int32                            `tfsdk:"external_api_source"` // The source of the external API configuration
+	CreateDate            types.Int64                            `tfsdk:"create_date"`         // The creation date
+	UpdateDate            types.Int64                            `tfsdk:"update_date"`         // The update date
+	Type                  types.String                           `tfsdk:"type"`                // The term type
+	Resource              *ResourceResourceModel                 `tfsdk:"resource"`
+	ExternalApiFormFields ExternalAPIFieldResourceModelListValue `tfsdk:"external_api_form_fields"`
 }
 
 func (r *ExternalTermResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -309,11 +308,6 @@ func (*ExternalTermResource) Schema(ctx context.Context, req resource.SchemaRequ
 					},
 				},
 			},
-			"collect_address": schema.BoolAttribute{
-				Computed:            true,
-				PlanModifiers:       []planmodifier.Bool{boolplanmodifier.UseStateForUnknown()},
-				MarkdownDescription: "Whether to collect an address for this term",
-			},
 			"external_api_source": schema.Int32Attribute{
 				Computed: true,
 				PlanModifiers: []planmodifier.Int32{
@@ -338,16 +332,6 @@ func (*ExternalTermResource) Schema(ctx context.Context, req resource.SchemaRequ
 					int64planmodifier.UseStateForUnknown(),
 				},
 				MarkdownDescription: "The creation date",
-			},
-			"type_name": schema.StringAttribute{
-				Computed:            true,
-				MarkdownDescription: "The term type name",
-				PlanModifiers: []planmodifier.String{
-					stringplanmodifier.UseStateForUnknown(),
-				},
-				Validators: []validator.String{
-					stringvalidator.OneOf("Payment", "Ad View", "Registration", "Newsletter", "External", "Custom", "Access Granted", "Gift", "Specific Email Addresses Contract", "Email Domain Contract", "IP Range Contract", "Dynamic", "Linked"),
-				},
 			},
 			"type": schema.StringAttribute{
 				Computed: true,
@@ -433,7 +417,6 @@ func (r *ExternalTermResource) Create(ctx context.Context, req resource.CreateRe
 	state.ExternalApiId = types.StringValue(data.ExternalApiId)
 	state.Type = types.StringValue(string(data.Type))
 	state.SharedRedemptionUrl = types.StringPointerValue(data.SharedRedemptionUrl)
-	state.TypeName = types.StringValue(string(data.TypeName))
 	state.EvtGracePeriod = types.Int32Value(data.EvtGracePeriod)
 	state.EvtFixedTimeAccessPeriod = types.Int32PointerValue(data.EvtFixedTimeAccessPeriod)
 	Resource := ResourceResourceModelFrom(data.Resource)
@@ -460,7 +443,6 @@ func (r *ExternalTermResource) Create(ctx context.Context, req resource.CreateRe
 	}
 	state.ExternalApiFormFields = ExternalAPIFieldResourceModelListValue{ListValue: listValue}
 	state.EvtItunesBundleId = types.StringValue(data.EvtItunesBundleId)
-	state.CollectAddress = types.BoolValue(data.CollectAddress)
 	state.Description = types.StringValue(data.Description)
 	state.TermId = types.StringValue(data.TermId)
 	tflog.Info(ctx, fmt.Sprintf("complete creating resource %s(id: %s)", state.Name, state.TermId))
@@ -515,7 +497,6 @@ func (r *ExternalTermResource) Update(ctx context.Context, req resource.UpdateRe
 	state.ExternalApiId = types.StringValue(data.ExternalApiId)
 	state.Type = types.StringValue(string(data.Type))
 	state.SharedRedemptionUrl = types.StringPointerValue(data.SharedRedemptionUrl)
-	state.TypeName = types.StringValue(string(data.TypeName))
 	state.EvtGracePeriod = types.Int32Value(data.EvtGracePeriod)
 	state.EvtFixedTimeAccessPeriod = types.Int32PointerValue(data.EvtFixedTimeAccessPeriod)
 	Resource := ResourceResourceModelFrom(data.Resource)
@@ -542,7 +523,6 @@ func (r *ExternalTermResource) Update(ctx context.Context, req resource.UpdateRe
 	state.EvtItunesProductId = types.StringValue(data.EvtItunesProductId)
 	state.Name = types.StringValue(data.Name)
 	state.EvtItunesBundleId = types.StringValue(data.EvtItunesBundleId)
-	state.CollectAddress = types.BoolValue(data.CollectAddress)
 	state.Description = types.StringValue(data.Description)
 	tflog.Info(ctx, fmt.Sprintf("complete updating resource %s(id: %s)", state.Name, state.TermId))
 
@@ -582,7 +562,6 @@ func (r *ExternalTermResource) Read(ctx context.Context, req resource.ReadReques
 	state.ExternalApiId = types.StringValue(data.ExternalApiId)
 	state.Type = types.StringValue(string(data.Type))
 	state.SharedRedemptionUrl = types.StringPointerValue(data.SharedRedemptionUrl)
-	state.TypeName = types.StringValue(string(data.TypeName))
 	state.EvtGracePeriod = types.Int32Value(data.EvtGracePeriod)
 	state.EvtFixedTimeAccessPeriod = types.Int32PointerValue(data.EvtFixedTimeAccessPeriod)
 	Resource := ResourceResourceModelFrom(data.Resource)
@@ -609,7 +588,6 @@ func (r *ExternalTermResource) Read(ctx context.Context, req resource.ReadReques
 	state.EvtItunesProductId = types.StringValue(data.EvtItunesProductId)
 	state.Name = types.StringValue(data.Name)
 	state.EvtItunesBundleId = types.StringValue(data.EvtItunesBundleId)
-	state.CollectAddress = types.BoolValue(data.CollectAddress)
 	state.Description = types.StringValue(data.Description)
 	tflog.Trace(ctx, "read a resource")
 
