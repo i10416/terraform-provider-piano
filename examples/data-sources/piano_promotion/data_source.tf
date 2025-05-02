@@ -1,5 +1,5 @@
 
 data "piano_promotion" "sample" {
-  aid = "sample-aid"
+  aid          = "sample-aid"
   promotion_id = "sample-promotion-id"
 }
