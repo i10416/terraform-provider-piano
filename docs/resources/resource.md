@@ -3,12 +3,12 @@
 page_title: "piano_resource Resource - piano"
 subcategory: ""
 description: |-
-  Resource resource. This resource is used to create, update, and delete a resource.
+  Resource resource. Resources are fundamental concept used to control access to content you’re gating (e.g. an article, a movie, a blog post, a pdf, access to a forum, access to premium site content, etc.) in piano.io.
 ---
 
 # piano_resource (Resource)
 
-Resource resource. This resource is used to create, update, and delete a resource.
+Resource resource. Resources are fundamental concept used to control access to content you’re gating (e.g. an article, a movie, a blog post, a pdf, access to a forum, access to premium site content, etc.) in piano.io.
 
 ## Example Usage
 
