@@ -59,7 +59,8 @@ func (d *ResourceDataSource) Metadata(ctx context.Context, req datasource.Metada
 
 func (d *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "Resource data source. This data source is used to get the resource details.",
+		MarkdownDescription: "Resource data source. Resources are fundamental concept used to control access to " +
+			"content you’re gating (e.g. an article, a movie, a blog post, a pdf, access to a forum, access to premium site content, etc.) in piano.io.",
 		Attributes: map[string]schema.Attribute{
 			"rid": schema.StringAttribute{
 				MarkdownDescription: "The resource ID",

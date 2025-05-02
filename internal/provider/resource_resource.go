@@ -66,7 +66,8 @@ func (r *ResourceResource) Metadata(ctx context.Context, req resource.MetadataRe
 
 func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "Resource resource. This resource is used to create, update, and delete a resource.",
+		MarkdownDescription: "Resource resource. Resources are fundamental concept used to control access to " +
+			"content you’re gating (e.g. an article, a movie, a blog post, a pdf, access to a forum, access to premium site content, etc.) in piano.io.",
 		Attributes: map[string]schema.Attribute{
 			"aid": schema.StringAttribute{
 				MarkdownDescription: "The application ID",

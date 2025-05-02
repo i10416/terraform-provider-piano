@@ -3,12 +3,12 @@
 page_title: "piano_resource Data Source - piano"
 subcategory: ""
 description: |-
-  Resource data source. This data source is used to get the resource details.
+  Resource data source. Resources are fundamental concept used to control access to content you’re gating (e.g. an article, a movie, a blog post, a pdf, access to a forum, access to premium site content, etc.) in piano.io.
 ---
 
 # piano_resource (Data Source)
 
-Resource data source. This data source is used to get the resource details.
+Resource data source. Resources are fundamental concept used to control access to content you’re gating (e.g. an article, a movie, a blog post, a pdf, access to a forum, access to premium site content, etc.) in piano.io.
 
 
 
