@@ -28,6 +28,10 @@ linters:
       - third_party$
       - builtin$
       - examples$
+  settings:
+    misspell:
+      ignore-rules:
+        - copywrite # The name of CLI tool
 issues:
   max-issues-per-linter: 0
   max-same-issues: 0
