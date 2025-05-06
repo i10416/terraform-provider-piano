@@ -33599,18 +33599,18 @@ components:
       additionalProperties: false
     OfferModelResult:
       required:
-        - OfferModel
+        - offer
       type: object
       properties:
-        OfferModel:
+        offer:
           $ref: '#/components/schemas/OfferModel'
       additionalProperties: false
     OfferModelArrayResult:
       required:
-        - OfferModel
+        - offers
       type: object
       properties:
-        OfferModel:
+        offers:
           type: array
           items:
             $ref: '#/components/schemas/OfferModel'

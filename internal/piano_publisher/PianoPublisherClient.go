@@ -7809,12 +7809,12 @@ type OfferModelStatus string
 
 // OfferModelArrayResult defines model for OfferModelArrayResult.
 type OfferModelArrayResult struct {
-	OfferModel []OfferModel `json:"OfferModel"`
+	Offers []OfferModel `json:"offers"`
 }
 
 // OfferModelResult defines model for OfferModelResult.
 type OfferModelResult struct {
-	OfferModel OfferModel `json:"OfferModel"`
+	Offer OfferModel `json:"offer"`
 }
 
 // OfferTemplate defines model for OfferTemplate.
