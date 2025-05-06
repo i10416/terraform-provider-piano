@@ -95,6 +95,8 @@ type PromotionFixedDiscountResourceModel struct {
 
 func (*PromotionResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
+		MarkdownDescription: "Promotion represents a special discount. Users can use a promotion code associated with a promotion to get a discount." +
+			"For more details, see https://docs.piano.io/promotions/",
 		Attributes: map[string]schema.Attribute{
 			// always required
 			"aid": schema.StringAttribute{
@@ -131,8 +133,11 @@ func (*PromotionResource) Schema(ctx context.Context, req resource.SchemaRequest
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
 				},
-				MarkdownDescription: "The type of dependency to terms",
-				Validators:          []validator.String{stringvalidator.OneOf("all", "include", "unlocked")},
+				MarkdownDescription: `The type of dependency to terms.
+When the value is "all", the promotion can be applied to app terms.
+When the value is "include", the promotion can be applied to those specific terms.
+When the value is "unlocked", the promotion allows customers to access special terms that they could not have accessed without the code`,
+				Validators: []validator.String{stringvalidator.OneOf("all", "include", "unlocked")},
 			},
 			// filled with empty value in create response
 			"billing_period_limit": schema.Int32Attribute{
