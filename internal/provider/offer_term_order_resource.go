@@ -60,6 +60,7 @@ type OfferTermOrderResourceModel struct {
 
 func (*OfferTermOrderResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
+		MarkdownDescription: "This resource defines the order of terms in an offer.",
 		Attributes: map[string]schema.Attribute{
 			"aid": schema.StringAttribute{
 				Required:            true,
