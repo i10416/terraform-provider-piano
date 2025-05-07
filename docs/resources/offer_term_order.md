@@ -48,3 +48,11 @@ resource "piano_offer_term_order" "term_order_in_sample_offer" {
 - `aid` (String) The application ID
 - `offer_id` (String) The offer ID
 - `term_ids` (List of String) The term ids in the offer
+
+## Import
+
+Import is supported using the following syntax:
+
+```shell
+terraform import piano_offer_term_order.sample sample-aid/sample-offer-id
+```

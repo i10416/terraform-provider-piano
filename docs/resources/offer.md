@@ -51,3 +51,11 @@ resource "piano_offer_term_order" "term_order_in_sample_offer" {
 ### Read-Only
 
 - `offer_id` (String) The offer ID
+
+## Import
+
+Import is supported using the following syntax:
+
+```shell
+terraform import piano_offer.sample sample-aid/sample-offer-id
+```
