@@ -181,7 +181,7 @@ func (r *LicenseeResource) Create(ctx context.Context, req resource.CreateReques
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to create example, got error: %s", err))
 		return
 	}
-	anyResponse, err := syntax.AnyResponseFrom(response, &resp.Diagnostics)
+	anyResponse, err := syntax.SuccessfulResponseFrom(response, &resp.Diagnostics)
 	if err != nil {
 		return
 	}
@@ -229,7 +229,7 @@ func (r *LicenseeResource) Read(ctx context.Context, req resource.ReadRequest, r
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to fetch licensee, got error: %s", err))
 		return
 	}
-	anyResponse, err := syntax.AnyResponseFrom(response, &resp.Diagnostics)
+	anyResponse, err := syntax.SuccessfulResponseFrom(response, &resp.Diagnostics)
 	if err != nil {
 		return
 	}
@@ -291,7 +291,7 @@ func (r *LicenseeResource) Update(ctx context.Context, req resource.UpdateReques
 		tflog.Error(ctx, fmt.Sprintf("Unable to update licensee: %e", err))
 		return
 	}
-	anyResponse, err := syntax.AnyResponseFrom(response, &resp.Diagnostics)
+	anyResponse, err := syntax.SuccessfulResponseFrom(response, &resp.Diagnostics)
 	if err != nil {
 		return
 	}
@@ -340,7 +340,7 @@ func (r *LicenseeResource) Delete(ctx context.Context, req resource.DeleteReques
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to delete licensee, got error: %s", err))
 		return
 	}
-	_, err = syntax.AnyResponseFrom(response, &resp.Diagnostics)
+	_, err = syntax.SuccessfulResponseFrom(response, &resp.Diagnostics)
 	if err != nil {
 		return
 	}

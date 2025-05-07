@@ -797,7 +797,7 @@ func (r *PaymentTermResource) Read(ctx context.Context, req resource.ReadRequest
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to fetch term, got error: %s", err))
 		return
 	}
-	anyResponse, err := syntax.AnyResponseFrom(response, &resp.Diagnostics)
+	anyResponse, err := syntax.SuccessfulResponseFrom(response, &resp.Diagnostics)
 	if err != nil {
 		return
 	}
@@ -879,7 +879,7 @@ func (r *PaymentTermResource) Delete(ctx context.Context, req resource.DeleteReq
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to delete resource, got error: %s", err))
 		return
 	}
-	_, err = syntax.AnyResponseFrom(response, &resp.Diagnostics)
+	_, err = syntax.SuccessfulResponseFrom(response, &resp.Diagnostics)
 	if err != nil {
 		return
 	}

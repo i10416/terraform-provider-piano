@@ -10,7 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 )
 
-func AnyResponseFrom(response *http.Response, diagnostics *diag.Diagnostics) (*piano.AnyResponse, error) {
+func SuccessfulResponseFrom(response *http.Response, diagnostics *diag.Diagnostics) (*piano.AnyResponse, error) {
 	return piano.SuccessfulResponseFrom(response, func(summary, detail string) {
 		diagnostics.AddError(summary, detail)
 	})

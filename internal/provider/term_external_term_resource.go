@@ -402,7 +402,7 @@ func (r *ExternalTermResource) Create(ctx context.Context, req resource.CreateRe
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to create example, got error: %s", err))
 		return
 	}
-	anyResponse, err := syntax.AnyResponseFrom(response, &resp.Diagnostics)
+	anyResponse, err := syntax.SuccessfulResponseFrom(response, &resp.Diagnostics)
 	if err != nil {
 		return
 	}
@@ -489,7 +489,7 @@ func (r *ExternalTermResource) Update(ctx context.Context, req resource.UpdateRe
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to create example, got error: %s", err))
 		return
 	}
-	anyResponse, err := syntax.AnyResponseFrom(response, &resp.Diagnostics)
+	anyResponse, err := syntax.SuccessfulResponseFrom(response, &resp.Diagnostics)
 	if err != nil {
 		return
 	}
@@ -562,7 +562,7 @@ func (r *ExternalTermResource) Read(ctx context.Context, req resource.ReadReques
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to fetch term, got error: %s", err))
 		return
 	}
-	anyResponse, err := syntax.AnyResponseFrom(response, &resp.Diagnostics)
+	anyResponse, err := syntax.SuccessfulResponseFrom(response, &resp.Diagnostics)
 	if err != nil {
 		return
 	}
@@ -633,7 +633,7 @@ func (r *ExternalTermResource) Delete(ctx context.Context, req resource.DeleteRe
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to delete resource, got error: %s", err))
 		return
 	}
-	_, err = syntax.AnyResponseFrom(response, &resp.Diagnostics)
+	_, err = syntax.SuccessfulResponseFrom(response, &resp.Diagnostics)
 	if err != nil {
 		return
 	}
