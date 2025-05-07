@@ -123,7 +123,7 @@ func (r *OfferTermBindingResource) Read(ctx context.Context, req resource.ReadRe
 	if present {
 		resp.Diagnostics.Append(resp.State.Set(ctx, &state)...)
 	} else {
-		resp.Diagnostics.AddError(fmt.Sprintf("Resource not found"), fmt.Sprintf("The offer(%s) does not contain the term(%s)", state.OfferId, state.TermId))
+		resp.Diagnostics.AddError("Resource not found", fmt.Sprintf("The offer(%s) does not contain the term(%s)", state.OfferId, state.TermId))
 		return
 	}
 }
