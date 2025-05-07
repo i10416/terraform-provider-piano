@@ -729,7 +729,7 @@ func PaymentBillingPlanTableResourceModelFrom(data piano_publisher.PaymentBillin
 	ret.Billing = types.StringPointerValue(data.Billing)
 	ret.BillingInfo = types.StringPointerValue(data.BillingInfo)
 	ret.Date = types.StringPointerValue(data.Date)
-	//ret.DateValue = types.Int64PointerValue(int64(data.DateValue))
+	// ret.DateValue = types.Int64PointerValue(int64(data.DateValue))
 	ret.BillingPeriod = types.StringPointerValue(data.BillingPeriod)
 	ret.IsFreeTrial = types.StringPointerValue(data.IsFreeTrial)
 	ret.Price = types.StringPointerValue(data.Price)

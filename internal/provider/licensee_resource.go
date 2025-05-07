@@ -344,7 +344,6 @@ func (r *LicenseeResource) Delete(ctx context.Context, req resource.DeleteReques
 	if err != nil {
 		return
 	}
-
 }
 
 func (r *LicenseeResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {

@@ -371,7 +371,6 @@ func (r *ResourceResource) Delete(ctx context.Context, req resource.DeleteReques
 	if err != nil {
 		return
 	}
-
 }
 
 func (r *ResourceResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
