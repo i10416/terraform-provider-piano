@@ -5,11 +5,15 @@ linters:
     - copyloopvar
     - durationcheck
     - errcheck
+    - errorlint
     - forcetypeassert
     - godot
+    - govet
+    - gocritic
     - ineffassign
     - makezero
     - misspell
+    - gosec
     - nilerr
     - predeclared
     - staticcheck
@@ -17,6 +21,14 @@ linters:
     - unparam
     - unused
     - usetesting
+    - exhaustive
+    - iface
+    - nolintlint
+    - unconvert
+    - goconst
+    - whitespace
+    - exptostd
+    - gocheckcompilerdirectives
   exclusions:
     generated: lax
     presets:
@@ -25,6 +37,7 @@ linters:
       - legacy
       - std-error-handling
     paths:
+      - internal/piano_publisher/PianoPublisherClient.go
       - third_party$
       - builtin$
       - examples$

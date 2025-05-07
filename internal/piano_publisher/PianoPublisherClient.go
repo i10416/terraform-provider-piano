@@ -7780,8 +7780,10 @@ type MyAccount struct {
 // OfferModel defines model for OfferModel.
 type OfferModel struct {
 	// Aid The application ID
-	Aid      string `json:"aid"`
-	CreateBy User   `json:"create_by"`
+	Aid string `json:"aid"`
+
+	// CreateBy User object for contents provider side
+	CreateBy Staff `json:"create_by"`
 
 	// CreateDate The creation date
 	CreateDate int `json:"create_date"`
@@ -7796,9 +7798,11 @@ type OfferModel struct {
 	OfferId string `json:"offer_id"`
 
 	// Status The offer status
-	Status   OfferModelStatus `json:"status"`
-	Terms    []Term           `json:"terms"`
-	UpdateBy User             `json:"update_by"`
+	Status OfferModelStatus `json:"status"`
+	Terms  []Term           `json:"terms"`
+
+	// UpdateBy User object for contents provider side
+	UpdateBy Staff `json:"update_by"`
 
 	// UpdateDate The update date
 	UpdateDate int `json:"update_date"`
@@ -7809,12 +7813,12 @@ type OfferModelStatus string
 
 // OfferModelArrayResult defines model for OfferModelArrayResult.
 type OfferModelArrayResult struct {
-	OfferModel []OfferModel `json:"OfferModel"`
+	Offers []OfferModel `json:"offers"`
 }
 
 // OfferModelResult defines model for OfferModelResult.
 type OfferModelResult struct {
-	OfferModel OfferModel `json:"OfferModel"`
+	Offer OfferModel `json:"offer"`
 }
 
 // OfferTemplate defines model for OfferTemplate.
@@ -10498,6 +10502,9 @@ type PostPublisherOfferCreateRequest struct {
 
 // PostPublisherOfferDeleteRequest defines model for PostPublisherOfferDeleteRequest.
 type PostPublisherOfferDeleteRequest struct {
+	// Aid The application ID
+	Aid string `json:"aid"`
+
 	// OfferId The offer ID
 	OfferId string `json:"offer_id"`
 }
@@ -10893,6 +10900,9 @@ type PostPublisherOfferTemplateVariantUpdateRequest struct {
 
 // PostPublisherOfferTermAddRequest defines model for PostPublisherOfferTermAddRequest.
 type PostPublisherOfferTermAddRequest struct {
+	// Aid The application ID
+	Aid string `json:"aid"`
+
 	// OfferId The offer ID
 	OfferId string `json:"offer_id"`
 
@@ -10902,6 +10912,9 @@ type PostPublisherOfferTermAddRequest struct {
 
 // PostPublisherOfferTermRemoveRequest defines model for PostPublisherOfferTermRemoveRequest.
 type PostPublisherOfferTermRemoveRequest struct {
+	// Aid The application ID
+	Aid string `json:"aid"`
+
 	// OfferId The offer ID
 	OfferId string `json:"offer_id"`
 
@@ -10911,11 +10924,14 @@ type PostPublisherOfferTermRemoveRequest struct {
 
 // PostPublisherOfferTermReorderRequest defines model for PostPublisherOfferTermReorderRequest.
 type PostPublisherOfferTermReorderRequest struct {
+	// Aid The application ID
+	Aid string `json:"aid"`
+
 	// OfferId The offer ID
 	OfferId string `json:"offer_id"`
 
 	// TermId Comma-separated list of The term ID
-	TermId string `json:"term_id"`
+	TermId []string `json:"term_id"`
 }
 
 // PostPublisherOfferUpdateError defines model for PostPublisherOfferUpdateError.
@@ -15287,6 +15303,36 @@ type SharedSubscriptionArrayResult struct {
 	SharedSubscription []SharedSubscription `json:"SharedSubscription"`
 }
 
+// Staff User object for contents provider side
+type Staff struct {
+	// CreateDate The user creation date
+	CreateDate int `json:"create_date"`
+
+	// DisplayName The user's display name
+	DisplayName string `json:"display_name"`
+
+	// Email The user's email address (single)
+	Email string `json:"email"`
+
+	// FirstName The user's first name
+	FirstName string `json:"first_name"`
+
+	// Image1 The user's profile image
+	Image1 *string `json:"image1"`
+
+	// LastLogin The last login stamp
+	LastLogin int `json:"last_login"`
+
+	// LastName The user's last name
+	LastName string `json:"last_name"`
+
+	// PersonalName The user's personal name. Name and surname ordered as per locale
+	PersonalName string `json:"personal_name"`
+
+	// Uid The user's ID
+	Uid string `json:"uid"`
+}
+
 // StringArrayResult defines model for StringArrayResult.
 type StringArrayResult struct {
 	Data []string `json:"data"`
@@ -15692,7 +15738,7 @@ type TermTypeName string
 
 // TermArrayResult defines model for TermArrayResult.
 type TermArrayResult struct {
-	Terms *[]Term `json:"terms,omitempty"`
+	Terms []Term `json:"terms"`
 }
 
 // TermBrief defines model for TermBrief.
@@ -18073,6 +18119,9 @@ type GetPublisherOfferCountParams struct {
 type GetPublisherOfferGetParams struct {
 	// OfferId The offer ID
 	OfferId string `form:"offer_id" json:"offer_id"`
+
+	// Aid The application ID
+	Aid string `form:"aid" json:"aid"`
 }
 
 // GetPublisherOfferListParams defines parameters for GetPublisherOfferList.
@@ -18398,6 +18447,9 @@ type GetPublisherOfferTemplateVariantRestoreParams struct {
 
 // GetPublisherOfferTermListParams defines parameters for GetPublisherOfferTermList.
 type GetPublisherOfferTermListParams struct {
+	// Aid The application ID
+	Aid string `form:"aid" json:"aid"`
+
 	// OfferId The offer ID
 	OfferId string `form:"offer_id" json:"offer_id"`
 }
@@ -32778,6 +32830,18 @@ func NewGetPublisherOfferGetRequest(server string, params *GetPublisherOfferGetP
 			}
 		}
 
+		if queryFrag, err := runtime.StyleParamWithLocation("form", true, "aid", runtime.ParamLocationQuery, params.Aid); err != nil {
+			return nil, err
+		} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+			return nil, err
+		} else {
+			for k, v := range parsed {
+				for _, v2 := range v {
+					queryValues.Add(k, v2)
+				}
+			}
+		}
+
 		queryURL.RawQuery = queryValues.Encode()
 	}
 
@@ -34824,6 +34888,18 @@ func NewGetPublisherOfferTermListRequest(server string, params *GetPublisherOffe
 
 	if params != nil {
 		queryValues := queryURL.Query()
+
+		if queryFrag, err := runtime.StyleParamWithLocation("form", true, "aid", runtime.ParamLocationQuery, params.Aid); err != nil {
+			return nil, err
+		} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+			return nil, err
+		} else {
+			for k, v := range parsed {
+				for _, v2 := range v {
+					queryValues.Add(k, v2)
+				}
+			}
+		}
 
 		if queryFrag, err := runtime.StyleParamWithLocation("form", true, "offer_id", runtime.ParamLocationQuery, params.OfferId); err != nil {
 			return nil, err

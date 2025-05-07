@@ -3612,6 +3612,12 @@ paths:
           required: true
           schema:
             type: string
+        - name: aid
+          in: query
+          description: The application ID
+          required: true
+          schema:
+            type: string
       responses:
         '200':
           description: successful operation
@@ -4930,6 +4936,12 @@ paths:
       description: Lists the terms composing a given offer.
       operationId: GetPublisherOfferTermList
       parameters:
+        - name: aid
+          in: query
+          description: The application ID
+          required: true
+          schema:
+            type: string
         - name: offer_id
           in: query
           description: The offer ID
@@ -5029,7 +5041,11 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               $ref: '#/components/schemas/PostPublisherOfferTermReorderRequest'
-        required: false
+            encoding:
+              term_id:
+                style: form
+                explode: true
+        required: true
       responses:
         '200':
           description: Success|OK
@@ -22720,13 +22736,13 @@ components:
           description: The creation date
           format: timestamp
         create_by:
-          $ref: '#/components/schemas/User'
+          $ref: '#/components/schemas/Staff'
         update_date:
           type: integer
           description: The update date
           format: timestamp
         update_by:
-          $ref: '#/components/schemas/User'
+          $ref: '#/components/schemas/Staff'
         terms:
           type: array
           items:
@@ -29812,6 +29828,50 @@ components:
         display_name:
           type: string
           description: The user's display name
+    Staff:
+      required:
+        - create_date
+        - display_name
+        - email
+        - first_name
+        - image1
+        - last_login
+        - last_name
+        - personal_name
+        - uid
+      type: object
+      description: "User object for contents provider side"
+      properties:
+        first_name:
+          type: string
+          description: The user's first name
+        last_name:
+          type: string
+          description: The user's last name
+        email:
+          type: string
+          description: The user's email address (single)
+        personal_name:
+          type: string
+          description: The user's personal name. Name and surname ordered as per locale
+        uid:
+          type: string
+          description: The user's ID
+        image1:
+          type: string
+          nullable: true
+          description: The user's profile image
+        create_date:
+          type: integer
+          description: The user creation date
+          format: timestamp
+        last_login:
+          type: integer
+          description: The last login stamp
+          format: timestamp
+        display_name:
+          type: string
+          description: The user's display name
     UserAccessDto:
       required:
         - access_id
@@ -33599,18 +33659,18 @@ components:
       additionalProperties: false
     OfferModelResult:
       required:
-        - OfferModel
+        - offer
       type: object
       properties:
-        OfferModel:
+        offer:
           $ref: '#/components/schemas/OfferModel'
       additionalProperties: false
     OfferModelArrayResult:
       required:
-        - OfferModel
+        - offers
       type: object
       properties:
-        OfferModel:
+        offers:
           type: array
           items:
             $ref: '#/components/schemas/OfferModel'
@@ -33669,7 +33729,7 @@ components:
       additionalProperties: false
     ExternalTermArrayResult:
       required:
-        - Term
+        - terms
       type: object
       properties:
         terms:
@@ -33678,7 +33738,7 @@ components:
             $ref: '#/components/schemas/ExternalTerm'
     TermArrayResult:
       required:
-        - Term
+        - terms
       type: object
       properties:
         terms:
@@ -36238,9 +36298,13 @@ components:
       additionalProperties: false
     PostPublisherOfferDeleteRequest:
       required:
+        - aid
         - offer_id
       type: object
       properties:
+        aid:
+          type: string
+          description: The application ID
         offer_id:
           type: string
           description: The offer ID
@@ -36614,10 +36678,14 @@ components:
       additionalProperties: false
     PostPublisherOfferTermAddRequest:
       required:
+        - aid
         - offer_id
         - term_id
       type: object
       properties:
+        aid:
+          type: string
+          description: The application ID
         offer_id:
           type: string
           description: The offer ID
@@ -36628,10 +36696,14 @@ components:
       additionalProperties: false
     PostPublisherOfferTermRemoveRequest:
       required:
+        - aid
         - offer_id
         - term_id
       type: object
       properties:
+        aid:
+          type: string
+          description: The application ID
         offer_id:
           type: string
           description: The offer ID
@@ -36642,15 +36714,21 @@ components:
       additionalProperties: false
     PostPublisherOfferTermReorderRequest:
       required:
+        - aid
         - offer_id
         - term_id
       type: object
       properties:
+        aid:
+          type: string
+          description: The application ID
         offer_id:
           type: string
           description: The offer ID
         term_id:
-          type: string
+          type: array
+          items:
+            type: string
           description: Comma-separated list of The term ID
           format: csv
       additionalProperties: false

@@ -28,6 +28,10 @@ resource "piano_promotion" "sample" {
 
 - `aid` (String) The application ID
 - `name` (String) The promotion name
+- `term_dependency_type` (String) The type of dependency to terms.
+When the value is "all", the promotion can be applied to app terms.
+When the value is "include", the promotion can be applied to those specific terms.
+When the value is "unlocked", the promotion allows customers to access special terms that they could not have accessed without the code
 
 ### Optional
 
@@ -42,10 +46,6 @@ resource "piano_promotion" "sample" {
 - `percentage_discount` (Number) The promotion discount, percentage
 - `promotion_code_prefix` (String) The prefix for all the codes
 - `start_date` (Number) The start date.
-- `term_dependency_type` (String) The type of dependency to terms.
-When the value is "all", the promotion can be applied to app terms.
-When the value is "include", the promotion can be applied to those specific terms.
-When the value is "unlocked", the promotion allows customers to access special terms that they could not have accessed without the code
 - `uses_allowed` (Number) The number of uses allowed by the promotion. If this value is null, it indicates unlimited uses allowed.
 
 ### Read-Only
