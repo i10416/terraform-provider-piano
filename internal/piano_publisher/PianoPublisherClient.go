@@ -10931,7 +10931,7 @@ type PostPublisherOfferTermReorderRequest struct {
 	OfferId string `json:"offer_id"`
 
 	// TermId Comma-separated list of The term ID
-	TermId string `json:"term_id"`
+	TermId []string `json:"term_id"`
 }
 
 // PostPublisherOfferUpdateError defines model for PostPublisherOfferUpdateError.
