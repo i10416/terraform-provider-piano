@@ -121,6 +121,7 @@ func (*PromotionResource) Schema(ctx context.Context, req resource.SchemaRequest
 				Computed: true,
 				Optional: true,
 				PlanModifiers: []planmodifier.String{
+					// Required on update
 					stringplanmodifier.UseStateForUnknown(),
 				},
 				MarkdownDescription: "The promotion discount type",
@@ -128,11 +129,7 @@ func (*PromotionResource) Schema(ctx context.Context, req resource.SchemaRequest
 			},
 			// filled with empty value in create response
 			"term_dependency_type": schema.StringAttribute{
-				Computed: true,
-				Optional: true,
-				PlanModifiers: []planmodifier.String{
-					stringplanmodifier.UseStateForUnknown(),
-				},
+				Required: true,
 				MarkdownDescription: `The type of dependency to terms.
 When the value is "all", the promotion can be applied to app terms.
 When the value is "include", the promotion can be applied to those specific terms.
@@ -213,6 +210,7 @@ When the value is "unlocked", the promotion allows customers to access special t
 			},
 			// filled with empty value in create response
 			"percentage_discount": schema.Float64Attribute{
+				// Required when "discount_type" is "percentage"
 				Optional: true,
 				Computed: true,
 				PlanModifiers: []planmodifier.Float64{
@@ -533,6 +531,7 @@ func (r *PromotionResource) Delete(ctx context.Context, req resource.DeleteReque
 		return
 	}
 	_, err = syntax.AnyResponseFrom(response, &resp.Diagnostics)
+	// TODO: handle 3009 -- Can not delete promotion with claimed codes
 	if err != nil {
 		return
 	}
