@@ -298,7 +298,7 @@ func (r *PromotionResource) Read(ctx context.Context, req resource.ReadRequest, 
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to fetch promotion, got error: %s", err))
 		return
 	}
-	anyResponse, err := syntax.AnyResponseFrom(response, &resp.Diagnostics)
+	anyResponse, err := syntax.SuccessfulResponseFrom(response, &resp.Diagnostics)
 	if err != nil {
 		return
 	}
@@ -385,7 +385,7 @@ func (r *PromotionResource) Create(ctx context.Context, req resource.CreateReque
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to fetch promotion, got error: %s", err))
 		return
 	}
-	anyResponse, err := syntax.AnyResponseFrom(response, &resp.Diagnostics)
+	anyResponse, err := syntax.SuccessfulResponseFrom(response, &resp.Diagnostics)
 	if err != nil {
 		return
 	}
@@ -472,7 +472,7 @@ func (r *PromotionResource) Update(ctx context.Context, req resource.UpdateReque
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to fetch promotion, got error: %s", err))
 		return
 	}
-	anyResponse, err := syntax.AnyResponseFrom(response, &resp.Diagnostics)
+	anyResponse, err := syntax.SuccessfulResponseFrom(response, &resp.Diagnostics)
 	if err != nil {
 		return
 	}
@@ -530,7 +530,7 @@ func (r *PromotionResource) Delete(ctx context.Context, req resource.DeleteReque
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to delete licensee, got error: %s", err))
 		return
 	}
-	_, err = syntax.AnyResponseFrom(response, &resp.Diagnostics)
+	_, err = syntax.SuccessfulResponseFrom(response, &resp.Diagnostics)
 	// TODO: handle 3009 -- Can not delete promotion with claimed codes
 	if err != nil {
 		return

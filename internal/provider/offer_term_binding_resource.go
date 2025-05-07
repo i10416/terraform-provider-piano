@@ -104,7 +104,7 @@ func (r *OfferTermBindingResource) Read(ctx context.Context, req resource.ReadRe
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to fetch promotion, got error: %s", err))
 		return
 	}
-	anyResponse, err := syntax.AnyResponseFrom(response, &resp.Diagnostics)
+	anyResponse, err := syntax.SuccessfulResponseFrom(response, &resp.Diagnostics)
 	if err != nil {
 		return
 	}
@@ -142,7 +142,7 @@ func (r *OfferTermBindingResource) Create(ctx context.Context, req resource.Crea
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to create offer, got error: %s", err))
 		return
 	}
-	_, err = syntax.AnyResponseFrom(response, &resp.Diagnostics)
+	_, err = syntax.SuccessfulResponseFrom(response, &resp.Diagnostics)
 	if err != nil {
 		return
 	}
@@ -165,7 +165,7 @@ func (r *OfferTermBindingResource) Delete(ctx context.Context, req resource.Dele
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to create offer, got error: %s", err))
 		return
 	}
-	_, err = syntax.AnyResponseFrom(response, &resp.Diagnostics)
+	_, err = syntax.SuccessfulResponseFrom(response, &resp.Diagnostics)
 	if err != nil {
 		return
 	}
