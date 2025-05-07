@@ -1,9 +1,13 @@
+// Copyright (c) Yoichiro Ito <contact.110416@gmail.com>
+// SPDX-License-Identifier: MPL-2.0
+
 package provider
 
 import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"net/url"
 	"strings"
 	"terraform-provider-piano/internal/piano_publisher"
 	"terraform-provider-piano/internal/syntax"
@@ -116,11 +120,14 @@ func (r *OfferTermOrderResource) Create(ctx context.Context, req resource.Create
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	response, err := r.client.PostPublisherOfferTermReorderWithFormdataBody(ctx, piano_publisher.PostPublisherOfferTermReorderFormdataRequestBody{
-		Aid:     state.Aid.ValueString(),
-		OfferId: state.OfferId.ValueString(),
-		TermId:  strings.Join(state.TermIds, ","),
-	})
+	data := url.Values{}
+	data.Set("aid", state.Aid.ValueString())
+	data.Set("offer_id", state.OfferId.ValueString())
+	for _, id := range state.TermIds {
+		data.Add("term_id", id)
+	}
+	body := strings.NewReader(data.Encode())
+	response, err := r.client.PostPublisherOfferTermReorderWithBody(ctx, "application/x-www-form-urlencoded", body)
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to create offer, got error: %s", err))
 		return
@@ -137,11 +144,14 @@ func (r *OfferTermOrderResource) Update(ctx context.Context, req resource.Update
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	response, err := r.client.PostPublisherOfferTermReorderWithFormdataBody(ctx, piano_publisher.PostPublisherOfferTermReorderFormdataRequestBody{
-		Aid:     state.Aid.ValueString(),
-		OfferId: state.OfferId.ValueString(),
-		TermId:  strings.Join(state.TermIds, ","),
-	})
+	data := url.Values{}
+	data.Set("aid", state.Aid.ValueString())
+	data.Set("offer_id", state.OfferId.ValueString())
+	for _, id := range state.TermIds {
+		data.Add("term_id", id)
+	}
+	body := strings.NewReader(data.Encode())
+	response, err := r.client.PostPublisherOfferTermReorderWithBody(ctx, "application/x-www-form-urlencoded", body)
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to update offer, got error: %s", err))
 		return

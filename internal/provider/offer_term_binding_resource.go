@@ -1,3 +1,6 @@
+// Copyright (c) Yoichiro Ito <contact.110416@gmail.com>
+// SPDX-License-Identifier: MPL-2.0
+
 package provider
 
 import (
@@ -19,18 +22,18 @@ import (
 )
 
 var (
-	_ resource.Resource                = &OfferTermResource{}
-	_ resource.ResourceWithImportState = &OfferTermResource{}
+	_ resource.Resource                = &OfferTermBindingResource{}
+	_ resource.ResourceWithImportState = &OfferTermBindingResource{}
 )
 
-type OfferTermResource struct {
+type OfferTermBindingResource struct {
 	client *piano_publisher.Client
 }
 
-func NewOfferTermResource() resource.Resource {
-	return &OfferTermResource{}
+func NewOfferTermBindingResource() resource.Resource {
+	return &OfferTermBindingResource{}
 }
-func (r *OfferTermResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
+func (r *OfferTermBindingResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
 	if req.ProviderData == nil {
 		return
 	}
@@ -48,18 +51,19 @@ func (r *OfferTermResource) Configure(ctx context.Context, req resource.Configur
 	r.client = client
 }
 
-func (r *OfferTermResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_offer_term"
+func (r *OfferTermBindingResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_offer_term_binding"
 }
 
-type OfferTermResourceModel struct {
+type OfferTermBindingResourceModel struct {
 	Aid     types.String `tfsdk:"aid"`      // The application ID
 	OfferId types.String `tfsdk:"offer_id"` // The offer ID
 	TermId  types.String `tfsdk:"term_id"`
 }
 
-func (*OfferTermResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
+func (*OfferTermBindingResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
+		MarkdownDescription: "OfferTermBinding resource associates a term with an offer",
 		Attributes: map[string]schema.Attribute{
 			"aid": schema.StringAttribute{
 				Required:            true,
@@ -86,8 +90,8 @@ func (*OfferTermResource) Schema(ctx context.Context, req resource.SchemaRequest
 	}
 }
 
-func (r *OfferTermResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
-	var state OfferTermResourceModel
+func (r *OfferTermBindingResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+	var state OfferTermBindingResourceModel
 	resp.Diagnostics.Append(req.State.Get(ctx, &state)...)
 	if resp.Diagnostics.HasError() {
 		return
@@ -123,8 +127,8 @@ func (r *OfferTermResource) Read(ctx context.Context, req resource.ReadRequest, 
 		return
 	}
 }
-func (r *OfferTermResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
-	var state OfferTermResourceModel
+func (r *OfferTermBindingResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+	var state OfferTermBindingResourceModel
 	resp.Diagnostics.Append(req.Plan.Get(ctx, &state)...)
 	if resp.Diagnostics.HasError() {
 		return
@@ -144,10 +148,10 @@ func (r *OfferTermResource) Create(ctx context.Context, req resource.CreateReque
 	}
 	resp.Diagnostics.Append(resp.State.Set(ctx, &state)...)
 }
-func (r *OfferTermResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
+func (r *OfferTermBindingResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
 }
-func (r *OfferTermResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-	var state OfferTermResourceModel
+func (r *OfferTermBindingResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
+	var state OfferTermBindingResourceModel
 	resp.Diagnostics.Append(req.State.Get(ctx, &state)...)
 	if resp.Diagnostics.HasError() {
 		return
@@ -168,8 +172,8 @@ func (r *OfferTermResource) Delete(ctx context.Context, req resource.DeleteReque
 	resp.Diagnostics.Append(resp.State.Set(ctx, &state)...)
 }
 
-func (r *OfferTermResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
-	id, err := OfferTermIdFromString(req.ID)
+func (r *OfferTermBindingResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+	id, err := OfferTermBindingIdFromString(req.ID)
 	if err != nil {
 		resp.Diagnostics.AddError("Invalid offer term resource id", fmt.Sprintf("Unable to parse offer resource id, got error: %e", err))
 		return
@@ -179,18 +183,18 @@ func (r *OfferTermResource) ImportState(ctx context.Context, req resource.Import
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("term_id"), id.TermId)...)
 }
 
-type OfferTermResourceId struct {
+type OfferTermBindingResourceId struct {
 	Aid     string
 	OfferId string
 	TermId  string
 }
 
-func OfferTermIdFromString(input string) (*OfferTermResourceId, error) {
+func OfferTermBindingIdFromString(input string) (*OfferTermBindingResourceId, error) {
 	parts := strings.Split(input, "/")
 	if len(parts) != 3 {
 		return nil, errors.New("offer term resource id must be in {aid}/{offer_id}/{term_id} format")
 	}
-	data := OfferTermResourceId{
+	data := OfferTermBindingResourceId{
 		Aid:     parts[0],
 		OfferId: parts[1],
 		TermId:  parts[2],
