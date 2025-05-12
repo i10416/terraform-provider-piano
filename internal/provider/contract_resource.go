@@ -16,6 +16,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/boolplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
@@ -35,7 +36,8 @@ type ContractResourceModel struct {
 	Name         types.String `tfsdk:"name"`
 
 	// Computed
-	CreateDate types.Int64 `tfsdk:"create_date"`
+	CreateDate       types.Int64 `tfsdk:"create_date"`
+	ContractIsActive types.Bool  `tfsdk:"contract_is_active"`
 
 	// Optional
 	Description          types.String `tfsdk:"description"`
@@ -117,6 +119,11 @@ func (*ContractResource) Schema(ctx context.Context, req resource.SchemaRequest,
 				Required:            true,
 				MarkdownDescription: "The seats limit type (false: a notification is sent if the number of seats is exceeded, true: no user can access if the number of seats is exceeded)",
 			},
+			"contract_is_active": schema.BoolAttribute{
+				Computed:            true,
+				PlanModifiers:       []planmodifier.Bool{boolplanmodifier.UseStateForUnknown()},
+				MarkdownDescription: "The seats limit type (false: a notification is sent if the number of seats is exceeded, true: no user can access if the number of seats is exceeded)",
+			},
 			"rid": schema.StringAttribute{
 				Required:            true,
 				MarkdownDescription: "The resource ID",
@@ -185,6 +192,7 @@ func (r *ContractResource) Create(ctx context.Context, req resource.CreateReques
 	// Computed
 	plan.ContractId = types.StringValue(result.Contract.ContractId)
 	plan.CreateDate = types.Int64Value(int64(result.Contract.CreateDate))
+	plan.ContractIsActive = types.BoolValue(result.Contract.ContractIsActive)
 	// Updated
 	plan.ContractType = types.StringValue(string(result.Contract.ContractType))
 	plan.LicenseeId = types.StringValue(result.Contract.LicenseeId)
@@ -231,6 +239,7 @@ func (r *ContractResource) Read(ctx context.Context, req resource.ReadRequest, r
 	state.Name = types.StringValue(result.Contract.Name)
 	state.Description = types.StringPointerValue(result.Contract.Description)
 	state.CreateDate = types.Int64Value(int64(result.Contract.CreateDate))
+	state.ContractIsActive = types.BoolValue(result.Contract.ContractIsActive)
 	state.ContractType = types.StringValue(string(result.Contract.ContractType))
 	state.LandingPageUrl = types.StringValue(result.Contract.LandingPageUrl)
 	state.LicenseeId = types.StringValue(result.Contract.LicenseeId)
@@ -284,6 +293,9 @@ func (r *ContractResource) Update(ctx context.Context, req resource.UpdateReques
 		resp.Diagnostics.AddError("Decode Error", fmt.Sprintf("Unable to decode piano AnyMessage into OK Result, got error: %s", err.Error()))
 		return
 	}
+	// Computed
+	state.ContractIsActive = types.BoolValue(result.Contract.ContractIsActive)
+	state.CreateDate = types.Int64Value(int64(result.Contract.CreateDate))
 	// Updatable
 	state.LicenseeId = types.StringValue(result.Contract.LicenseeId)
 	state.ContractType = types.StringValue(string(result.Contract.ContractType))
