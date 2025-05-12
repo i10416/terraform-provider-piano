@@ -33,4 +33,5 @@ Contract Resource. This resource is used to create, update, and delete a contrac
 ### Read-Only
 
 - `contract_id` (String) The public ID of the contract
+- `contract_is_active` (Boolean) The seats limit type (false: a notification is sent if the number of seats is exceeded, true: no user can access if the number of seats is exceeded)
 - `create_date` (Number) The creation date of the contract
