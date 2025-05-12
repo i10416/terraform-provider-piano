@@ -26,7 +26,6 @@ Contract Resource. This resource is used to create, update, and delete a contrac
 
 ### Optional
 
-- `contract_is_active` (Boolean) The contract is active
 - `description` (String) The description of the contract
 - `is_hard_seats_limit_type` (Boolean) The seats limit type (false: a notification is sent if the number of seats is exceeded, true: no user can access if the number of seats is exceeded)
 - `landing_page_url` (String) The relative URL of the contract. It will be appended to the licensing base URL to get the complete landing page URL

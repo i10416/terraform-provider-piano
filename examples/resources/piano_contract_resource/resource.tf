@@ -6,5 +6,4 @@ resource "piano_contract" "example" {
   name                     = "Example Email Domain Contract"
   seats_number             = 100
   is_hard_seats_limit_type = true
-  contract_periods         = []
 }
