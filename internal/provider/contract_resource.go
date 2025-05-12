@@ -26,16 +26,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 )
 
-// SchedulePeriodModel describes the schedule period data model.
-type SchedulePeriodResourceModel struct {
-	PeriodId  types.String `tfsdk:"period_id"`
-	Name      types.String `tfsdk:"name"`
-	SellDate  types.Int64  `tfsdk:"sell_date"`
-	BeginDate types.Int64  `tfsdk:"begin_date"`
-	EndDate   types.Int64  `tfsdk:"end_date"`
-	Status    types.String `tfsdk:"status"`
-}
-
 // ContractSourceModel describes the data source data model.
 type ContractResourceModel struct {
 	// required
@@ -50,27 +40,11 @@ type ContractResourceModel struct {
 	CreateDate types.Int64 `tfsdk:"create_date"`
 
 	// Optional
-	Description          types.String                  `tfsdk:"description"`
-	LandingPageUrl       types.String                  `tfsdk:"landing_page_url"`
-	SeatsNumber          types.Int32                   `tfsdk:"seats_number"`
-	IsHardSeatsLimitType types.Bool                    `tfsdk:"is_hard_seats_limit_type"`
-	ContractIsActive     types.Bool                    `tfsdk:"contract_is_active"`
-	ContractPeriods      []SchedulePeriodResourceModel `tfsdk:"contract_periods"`
-}
-
-func SchedulePeriodResourceFromData(items []piano_publisher.SchedulePeriod) []SchedulePeriodResourceModel {
-	periods := []SchedulePeriodResourceModel{}
-	for _, item := range items {
-		period := SchedulePeriodResourceModel{}
-		period.PeriodId = types.StringValue(item.PeriodId)
-		period.Name = types.StringValue(item.Name)
-		period.SellDate = types.Int64Value(int64(item.SellDate))
-		period.BeginDate = types.Int64Value(int64(item.BeginDate))
-		period.EndDate = types.Int64Value(int64(item.EndDate))
-		period.Status = types.StringValue(string(item.Status))
-		periods = append(periods, period)
-	}
-	return periods
+	Description          types.String `tfsdk:"description"`
+	LandingPageUrl       types.String `tfsdk:"landing_page_url"`
+	SeatsNumber          types.Int32  `tfsdk:"seats_number"`
+	IsHardSeatsLimitType types.Bool   `tfsdk:"is_hard_seats_limit_type"`
+	ContractIsActive     types.Bool   `tfsdk:"contract_is_active"`
 }
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -162,38 +136,6 @@ func (*ContractResource) Schema(ctx context.Context, req resource.SchemaRequest,
 					boolplanmodifier.UseStateForUnknown(),
 				},
 			},
-			"contract_periods": schema.ListNestedAttribute{
-				Required:            true,
-				MarkdownDescription: "The periods of the contract",
-				NestedObject: schema.NestedAttributeObject{
-					Attributes: map[string]schema.Attribute{
-						"period_id": schema.StringAttribute{
-							Required:            true,
-							MarkdownDescription: "The ID of the period",
-						},
-						"name": schema.StringAttribute{
-							Required:            true,
-							MarkdownDescription: "The name of the period",
-						},
-						"sell_date": schema.Int64Attribute{
-							Required:            true,
-							MarkdownDescription: "The sell date of the period",
-						},
-						"begin_date": schema.Int64Attribute{
-							Required:            true,
-							MarkdownDescription: "The begin date of the period",
-						},
-						"end_date": schema.Int64Attribute{
-							Required:            true,
-							MarkdownDescription: "The end date of the period",
-						},
-						"status": schema.StringAttribute{
-							Computed:            true,
-							MarkdownDescription: "The status of the period",
-						},
-					},
-				},
-			},
 		},
 	}
 }
@@ -267,7 +209,6 @@ func (r *ContractResource) Create(ctx context.Context, req resource.CreateReques
 	plan.IsHardSeatsLimitType = types.BoolValue(result.Contract.IsHardSeatsLimitType)
 	plan.SeatsNumber = types.Int32Value(result.Contract.SeatsNumber)
 	plan.LandingPageUrl = types.StringValue(result.Contract.LandingPageUrl)
-	plan.ContractPeriods = SchedulePeriodResourceFromData(result.Contract.ContractPeriods)
 	tflog.Info(ctx, fmt.Sprintf("complete creating contract %s(id: %s)", plan.Name, plan.ContractId))
 
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
@@ -312,9 +253,6 @@ func (r *ContractResource) Read(ctx context.Context, req resource.ReadRequest, r
 	state.IsHardSeatsLimitType = types.BoolValue(result.Contract.IsHardSeatsLimitType)
 
 	state.ContractIsActive = types.BoolValue(result.Contract.ContractIsActive)
-
-	periods := SchedulePeriodResourceFromData(result.Contract.ContractPeriods)
-	state.ContractPeriods = periods
 
 	resp.Diagnostics.Append(resp.State.Set(ctx, &state)...)
 }
