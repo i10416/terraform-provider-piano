@@ -18,7 +18,6 @@ Contract Resource. This resource is used to create, update, and delete a contrac
 ### Required
 
 - `aid` (String) The application ID
-- `contract_periods` (Attributes List) The periods of the contract (see [below for nested schema](#nestedatt--contract_periods))
 - `contract_type` (String) The type of the contract. The value is one of the following: SPECIFIC_EMAIL_ADDRESSES_CONTRACT, EMAIL_DOMAIN_CONTRACT, IP_RANGE_CONTRACT
 - `licensee_id` (String) The public ID of the licensee
 - `name` (String) The name of the contract
@@ -36,18 +35,3 @@ Contract Resource. This resource is used to create, update, and delete a contrac
 
 - `contract_id` (String) The public ID of the contract
 - `create_date` (Number) The creation date of the contract
-
-<a id="nestedatt--contract_periods"></a>
-### Nested Schema for `contract_periods`
-
-Required:
-
-- `begin_date` (Number) The begin date of the period
-- `end_date` (Number) The end date of the period
-- `name` (String) The name of the period
-- `period_id` (String) The ID of the period
-- `sell_date` (Number) The sell date of the period
-
-Read-Only:
-
-- `status` (String) The status of the period
