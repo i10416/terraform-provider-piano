@@ -17,7 +17,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/boolplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
@@ -44,7 +43,6 @@ type ContractResourceModel struct {
 	LandingPageUrl       types.String `tfsdk:"landing_page_url"`
 	SeatsNumber          types.Int32  `tfsdk:"seats_number"`
 	IsHardSeatsLimitType types.Bool   `tfsdk:"is_hard_seats_limit_type"`
-	ContractIsActive     types.Bool   `tfsdk:"contract_is_active"`
 }
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -127,15 +125,6 @@ func (*ContractResource) Schema(ctx context.Context, req resource.SchemaRequest,
 				Required:            true,
 				MarkdownDescription: "The resource ID",
 			},
-			"contract_is_active": schema.BoolAttribute{
-				Computed:            true,
-				Optional:            true,
-				Default:             booldefault.StaticBool(false),
-				MarkdownDescription: "The contract is active",
-				PlanModifiers: []planmodifier.Bool{
-					boolplanmodifier.UseStateForUnknown(),
-				},
-			},
 		},
 	}
 }
@@ -173,7 +162,7 @@ func (r *ContractResource) Create(ctx context.Context, req resource.CreateReques
 	request := piano_publisher.PostPublisherLicensingContractCreateFormdataRequestBody{
 		Aid:                  plan.Aid.ValueString(),
 		LicenseeId:           plan.LicenseeId.ValueString(),
-		ContractType:         piano_publisher.PostPublisherLicensingContractCreateRequestContractTypeEMAILDOMAINCONTRACT,
+		ContractType:         piano_publisher.PostPublisherLicensingContractCreateRequestContractType(plan.ContractType.ValueString()),
 		ContractName:         plan.Name.ValueString(),
 		SeatsNumber:          plan.SeatsNumber.ValueInt32(),
 		IsHardSeatsLimitType: plan.IsHardSeatsLimitType.ValueBool(),
@@ -200,8 +189,8 @@ func (r *ContractResource) Create(ctx context.Context, req resource.CreateReques
 	// Computed
 	plan.ContractId = types.StringValue(result.Contract.ContractId)
 	plan.CreateDate = types.Int64Value(int64(result.Contract.CreateDate))
-	plan.ContractIsActive = types.BoolValue(result.Contract.ContractIsActive)
 	// Updated
+	plan.ContractType = types.StringValue(string(result.Contract.ContractType))
 	plan.LicenseeId = types.StringValue(result.Contract.LicenseeId)
 	plan.Rid = types.StringValue(result.Contract.Rid)
 	plan.Name = types.StringValue(result.Contract.Name)
@@ -246,13 +235,11 @@ func (r *ContractResource) Read(ctx context.Context, req resource.ReadRequest, r
 	state.Name = types.StringValue(result.Contract.Name)
 	state.Description = types.StringPointerValue(result.Contract.Description)
 	state.CreateDate = types.Int64Value(int64(result.Contract.CreateDate))
-
+	state.ContractType = types.StringValue(string(result.Contract.ContractType))
 	state.LandingPageUrl = types.StringValue(result.Contract.LandingPageUrl)
 	state.LicenseeId = types.StringValue(result.Contract.LicenseeId)
 	state.SeatsNumber = types.Int32Value(result.Contract.SeatsNumber)
 	state.IsHardSeatsLimitType = types.BoolValue(result.Contract.IsHardSeatsLimitType)
-
-	state.ContractIsActive = types.BoolValue(result.Contract.ContractIsActive)
 
 	resp.Diagnostics.Append(resp.State.Set(ctx, &state)...)
 }
@@ -301,10 +288,9 @@ func (r *ContractResource) Update(ctx context.Context, req resource.UpdateReques
 		resp.Diagnostics.AddError("Decode Error", fmt.Sprintf("Unable to decode piano AnyMessage into OK Result, got error: %s", err.Error()))
 		return
 	}
-	// Computed
-	state.ContractIsActive = types.BoolValue(result.Contract.ContractIsActive)
 	// Updatable
 	state.LicenseeId = types.StringValue(result.Contract.LicenseeId)
+	state.ContractType = types.StringValue(string(result.Contract.ContractType))
 	state.Rid = types.StringValue(result.Contract.Rid)
 	state.Name = types.StringValue(result.Contract.Name)
 	state.Description = types.StringPointerValue(result.Contract.Description)
