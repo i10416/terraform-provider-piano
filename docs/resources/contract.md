@@ -19,6 +19,7 @@ Contract Resource. This resource is used to create, update, and delete a contrac
 
 - `aid` (String) The application ID
 - `contract_type` (String) The type of the contract. The value is one of the following: SPECIFIC_EMAIL_ADDRESSES_CONTRACT, EMAIL_DOMAIN_CONTRACT, IP_RANGE_CONTRACT
+- `is_hard_seats_limit_type` (Boolean) The seats limit type (false: a notification is sent if the number of seats is exceeded, true: no user can access if the number of seats is exceeded)
 - `licensee_id` (String) The public ID of the licensee
 - `name` (String) The name of the contract
 - `rid` (String) The resource ID
@@ -27,7 +28,6 @@ Contract Resource. This resource is used to create, update, and delete a contrac
 ### Optional
 
 - `description` (String) The description of the contract
-- `is_hard_seats_limit_type` (Boolean) The seats limit type (false: a notification is sent if the number of seats is exceeded, true: no user can access if the number of seats is exceeded)
 - `landing_page_url` (String) The relative URL of the contract. It will be appended to the licensing base URL to get the complete landing page URL
 
 ### Read-Only

@@ -16,7 +16,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
@@ -107,7 +106,6 @@ func (*ContractResource) Schema(ctx context.Context, req resource.SchemaRequest,
 			},
 			"landing_page_url": schema.StringAttribute{
 				Optional:            true,
-				Computed:            true,
 				PlanModifiers:       []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
 				MarkdownDescription: "The relative URL of the contract. It will be appended to the licensing base URL to get the complete landing page URL",
 			},
@@ -116,9 +114,7 @@ func (*ContractResource) Schema(ctx context.Context, req resource.SchemaRequest,
 				MarkdownDescription: "The number of users who can access this contract",
 			},
 			"is_hard_seats_limit_type": schema.BoolAttribute{
-				Optional:            true,
-				Computed:            true,
-				Default:             booldefault.StaticBool(false),
+				Required:            true,
 				MarkdownDescription: "The seats limit type (false: a notification is sent if the number of seats is exceeded, true: no user can access if the number of seats is exceeded)",
 			},
 			"rid": schema.StringAttribute{
