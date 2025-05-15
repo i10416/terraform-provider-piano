@@ -40,7 +40,7 @@ func ValidPianoEndpoint(input string) bool {
 		"https://sandbox.piano.io/api/v3",
 		"https://api-eu.piano.io/api/v3",
 		"https://api-au.piano.io/api/v3",
-		"https://api-eu.piano.io/api/v3",
+		"https://api-ap.piano.io/api/v3",
 		"https://api.piano.io/api/v3",
 	}
 	exist := false
