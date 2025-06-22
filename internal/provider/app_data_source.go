@@ -109,7 +109,7 @@ func (d *AppDataSource) Configure(ctx context.Context, req datasource.ConfigureR
 		return
 	}
 
-	client, ok := req.ProviderData.(*piano_publisher.Client)
+	client, ok := req.ProviderData.(PianoProviderData)
 
 	if !ok {
 		resp.Diagnostics.AddError(
@@ -120,7 +120,7 @@ func (d *AppDataSource) Configure(ctx context.Context, req datasource.ConfigureR
 		return
 	}
 
-	d.client = client
+	d.client = &client.publisherClient
 }
 
 func (d *AppDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {

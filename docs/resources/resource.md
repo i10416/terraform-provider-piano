@@ -25,6 +25,7 @@ resource "piano_resource" "sample" {
 ### Required
 
 - `aid` (String) The application ID
+- `is_fbia_resource` (Boolean) Enable the resource for Facebook Subscriptions in Instant Articles
 - `name` (String) The name
 
 ### Optional
@@ -33,7 +34,6 @@ resource "piano_resource" "sample" {
 - `disabled` (Boolean) Whether the object is disabled
 - `external_id` (String) The external ID; defined by the client
 - `image_url` (String) The URL of the resource image
-- `is_fbia_resource` (Boolean) Enable the resource for Facebook Subscriptions in Instant Articles
 - `purchase_url` (String) The URL of the purchase page
 - `resource_url` (String) The URL of the resource
 

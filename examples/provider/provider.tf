@@ -11,5 +11,6 @@ terraform {
 
 provider "piano" {
   endpoint  = "https://sandbox.piano.io/api/v3"
-  api_token = "*********************"
+  api_token = var.PIANO_API_TOKEN
+  app_id = var.PIANO_APP_ID
 }
