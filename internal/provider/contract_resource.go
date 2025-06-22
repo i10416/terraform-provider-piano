@@ -137,7 +137,7 @@ func (r *ContractResource) Configure(ctx context.Context, req resource.Configure
 		return
 	}
 
-	client, ok := req.ProviderData.(*piano_publisher.Client)
+	client, ok := req.ProviderData.(*PianoProviderData)
 
 	if !ok {
 		resp.Diagnostics.AddError(
@@ -148,7 +148,7 @@ func (r *ContractResource) Configure(ctx context.Context, req resource.Configure
 		return
 	}
 
-	r.client = client
+	r.client = &client.publisherClient
 }
 
 func (r *ContractResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {

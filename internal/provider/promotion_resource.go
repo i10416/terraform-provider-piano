@@ -46,7 +46,7 @@ func (r *PromotionResource) Configure(ctx context.Context, req resource.Configur
 	if req.ProviderData == nil {
 		return
 	}
-	client, ok := req.ProviderData.(*piano_publisher.Client)
+	client, ok := req.ProviderData.(*PianoProviderData)
 
 	if !ok {
 		resp.Diagnostics.AddError(
@@ -57,7 +57,7 @@ func (r *PromotionResource) Configure(ctx context.Context, req resource.Configur
 		return
 	}
 
-	r.client = client
+	r.client = &client.publisherClient
 }
 func (r *PromotionResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
 	resp.TypeName = req.ProviderTypeName + "_promotion"

@@ -161,7 +161,7 @@ func (r *PaymentTermResource) Configure(ctx context.Context, req resource.Config
 		return
 	}
 
-	client, ok := req.ProviderData.(*piano_publisher.Client)
+	client, ok := req.ProviderData.(*PianoProviderData)
 
 	if !ok {
 		resp.Diagnostics.AddError(
@@ -172,7 +172,7 @@ func (r *PaymentTermResource) Configure(ctx context.Context, req resource.Config
 		return
 	}
 
-	r.client = client
+	r.client = &client.publisherClient
 }
 
 func (*PaymentTermResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {

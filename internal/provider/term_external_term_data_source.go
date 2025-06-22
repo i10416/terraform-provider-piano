@@ -294,7 +294,7 @@ func (r *ExternalTermDataSource) Configure(ctx context.Context, req datasource.C
 		return
 	}
 
-	client, ok := req.ProviderData.(*piano_publisher.Client)
+	client, ok := req.ProviderData.(*PianoProviderData)
 
 	if !ok {
 		resp.Diagnostics.AddError(
@@ -304,7 +304,7 @@ func (r *ExternalTermDataSource) Configure(ctx context.Context, req datasource.C
 
 		return
 	}
-	r.client = client
+	r.client = &client.publisherClient
 }
 
 func (r *ExternalTermDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {

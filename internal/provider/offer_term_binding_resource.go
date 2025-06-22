@@ -37,7 +37,7 @@ func (r *OfferTermBindingResource) Configure(ctx context.Context, req resource.C
 	if req.ProviderData == nil {
 		return
 	}
-	client, ok := req.ProviderData.(*piano_publisher.Client)
+	client, ok := req.ProviderData.(*PianoProviderData)
 
 	if !ok {
 		resp.Diagnostics.AddError(
@@ -48,7 +48,7 @@ func (r *OfferTermBindingResource) Configure(ctx context.Context, req resource.C
 		return
 	}
 
-	r.client = client
+	r.client = &client.publisherClient
 }
 
 func (r *OfferTermBindingResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {

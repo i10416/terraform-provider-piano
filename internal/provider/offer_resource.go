@@ -37,7 +37,7 @@ func (r *OfferResource) Configure(ctx context.Context, req resource.ConfigureReq
 	if req.ProviderData == nil {
 		return
 	}
-	client, ok := req.ProviderData.(*piano_publisher.Client)
+	client, ok := req.ProviderData.(*PianoProviderData)
 
 	if !ok {
 		resp.Diagnostics.AddError(
@@ -48,7 +48,7 @@ func (r *OfferResource) Configure(ctx context.Context, req resource.ConfigureReq
 		return
 	}
 
-	r.client = client
+	r.client = &client.publisherClient
 }
 
 func (r *OfferResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {

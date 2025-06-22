@@ -8,6 +8,8 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"strings"
+	"terraform-provider-piano/internal/piano_id"
 	"terraform-provider-piano/internal/piano_publisher"
 
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
@@ -38,6 +40,11 @@ type PianoProvider struct {
 type PianoProviderModel struct {
 	Endpoint types.String `tfsdk:"endpoint"`
 	ApiToken types.String `tfsdk:"api_token"`
+}
+
+type PianoProviderData struct {
+	publisherClient piano_publisher.Client
+	idClient        piano_id.Client
 }
 
 func (p *PianoProvider) Metadata(ctx context.Context, req provider.MetadataRequest, resp *provider.MetadataResponse) {
@@ -97,7 +104,23 @@ func (p *PianoProvider) Configure(ctx context.Context, req provider.ConfigureReq
 
 	tflog.SetField(ctx, "piano_endpoint", endpoint)
 	tflog.SetField(ctx, "piano_api_token", apiToken)
+	idEndpoint := fmt.Sprintf("%s/id/api/v1", strings.TrimSuffix(endpoint, "/api/v3"))
+
 	tflog.MaskFieldValuesWithFieldKeys(ctx, "piano_api_token")
+	idClient, err := piano_id.NewClient(idEndpoint, func(client *piano_id.Client) error {
+		client.RequestEditors = append(client.RequestEditors, func(ctx context.Context, req *http.Request) error {
+			copied := req.URL.Query()
+			copied.Add("api_token", apiToken)
+			req.URL.RawQuery = copied.Encode()
+			req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", apiToken))
+			return nil
+		})
+		return nil
+	})
+	if err != nil {
+		resp.Diagnostics.AddError("Unable to create Piano id client", fmt.Sprintf("Unable to create Piano id client due to %s", err))
+		return
+	}
 	client, err := piano_publisher.NewClient(endpoint, func(client *piano_publisher.Client) error {
 		client.RequestEditors = append(client.RequestEditors, func(ctx context.Context, req *http.Request) error {
 			req.Header.Add("API_TOKEN", apiToken)
@@ -106,11 +129,15 @@ func (p *PianoProvider) Configure(ctx context.Context, req provider.ConfigureReq
 		return nil
 	})
 	if err != nil {
-		resp.Diagnostics.AddError("Unable to create Piano client", fmt.Sprintf("Unable to create Piano client due to %s", err))
+		resp.Diagnostics.AddError("Unable to create Piano publisher client", fmt.Sprintf("Unable to create Piano publisher client due to %s", err))
 		return
 	}
-	resp.DataSourceData = client
-	resp.ResourceData = client
+	providerData := PianoProviderData{
+		publisherClient: *client,
+		idClient:        *idClient,
+	}
+	resp.ResourceData = providerData
+	resp.ResourceData = providerData
 }
 
 func (p *PianoProvider) Resources(ctx context.Context) []func() resource.Resource {

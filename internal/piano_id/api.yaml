@@ -1,0 +1,102 @@
+# Copyright (c) Yoichiro Ito <contact.110416@gmail.com>
+# SPDX-License-Identifier: MPL-2.0
+
+openapi: 3.0.1
+info:
+  title: id
+  version: SNAPSHOT
+servers:
+  - url: /id/api/v1
+paths:
+  /publisher/customField:
+    post:
+      summary: "create or update one or more custom field keys"
+      description: >-
+        create or update one or more custom field keys
+      operationId: PublisherCustomFieldPost
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostPublisherCustomFieldRequest'
+        required: true
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostPublisherCustomFieldResponse'
+components:
+  schemas:
+    PostPublisherCustomFieldRequest:
+      type: array
+      items:
+        $ref: '#/components/schemas/CustomFieldDefinition'
+    CustomFieldDefinition:
+      type: object
+      required:
+        - field_name
+        - data_type
+        - title
+        - editable
+        - comment
+        - archived
+      properties:
+        field_name:
+          type: string
+        data_type:
+          type: string
+          enum:
+            - TEXT
+            - ISO_DATE
+            - BOOLEAN
+            - SINGLE_SELECT_LIST
+            - MULTI_SELECT_LIST
+        title:
+          type: string
+        editable:
+          type: boolean
+        comment:
+          type: string
+          nullable: true
+        archived:
+          type: boolean
+    PostPublisherCustomFieldResponse:
+      type: array
+      items:
+        $ref: '#/components/schemas/PostPublisherCustomFieldResponseItem'
+    PostPublisherCustomFieldResponseItem:
+      type: object
+      required:
+        - fieldName
+        - created
+        - dataType
+        - comment
+        - editable
+        - archived
+        - title
+      properties:
+        fieldName:
+          type: string
+        created:
+          type: string
+        dataType:
+          type: string
+          enum:
+            - TEXT
+            - ISO_DATE
+            - BOOLEAN
+            - SINGLE_SELECT_LIST
+            - MULTI_SELECT_LIST
+        comment:
+          type: string
+          nullable: true
+        editable:
+          type: boolean
+        archived:
+          type: boolean
+        title:
+          type: string
+
+
