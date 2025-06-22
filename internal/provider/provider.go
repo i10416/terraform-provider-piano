@@ -136,6 +136,7 @@ func (p *PianoProvider) Configure(ctx context.Context, req provider.ConfigureReq
 		publisherClient: *client,
 		idClient:        *idClient,
 	}
+
 	resp.ResourceData = providerData
 	resp.ResourceData = providerData
 }

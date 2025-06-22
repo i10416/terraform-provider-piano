@@ -36,7 +36,7 @@ func (r *PromotionDataSource) Configure(ctx context.Context, req datasource.Conf
 	if req.ProviderData == nil {
 		return
 	}
-	client, ok := req.ProviderData.(*PianoProviderData)
+	client, ok := req.ProviderData.(PianoProviderData)
 
 	if !ok {
 		resp.Diagnostics.AddError(

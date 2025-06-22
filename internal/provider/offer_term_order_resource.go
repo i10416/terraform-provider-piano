@@ -34,7 +34,7 @@ func (r *OfferTermOrderResource) Configure(ctx context.Context, req resource.Con
 	if req.ProviderData == nil {
 		return
 	}
-	client, ok := req.ProviderData.(*PianoProviderData)
+	client, ok := req.ProviderData.(PianoProviderData)
 
 	if !ok {
 		resp.Diagnostics.AddError(

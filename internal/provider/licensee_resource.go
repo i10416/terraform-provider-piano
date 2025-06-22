@@ -136,7 +136,7 @@ func (r *LicenseeResource) Configure(ctx context.Context, req resource.Configure
 		return
 	}
 
-	client, ok := req.ProviderData.(*PianoProviderData)
+	client, ok := req.ProviderData.(PianoProviderData)
 
 	if !ok {
 		resp.Diagnostics.AddError(

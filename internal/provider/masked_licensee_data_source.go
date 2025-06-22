@@ -99,7 +99,7 @@ func (d *MaskedLicenseeDataSource) Configure(ctx context.Context, req datasource
 		return
 	}
 
-	client, ok := req.ProviderData.(*PianoProviderData)
+	client, ok := req.ProviderData.(PianoProviderData)
 
 	if !ok {
 		resp.Diagnostics.AddError(

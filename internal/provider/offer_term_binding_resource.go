@@ -37,7 +37,7 @@ func (r *OfferTermBindingResource) Configure(ctx context.Context, req resource.C
 	if req.ProviderData == nil {
 		return
 	}
-	client, ok := req.ProviderData.(*PianoProviderData)
+	client, ok := req.ProviderData.(PianoProviderData)
 
 	if !ok {
 		resp.Diagnostics.AddError(

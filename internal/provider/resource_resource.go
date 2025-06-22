@@ -152,7 +152,7 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 			},
 			"is_fbia_resource": schema.BoolAttribute{
 				MarkdownDescription: "Enable the resource for Facebook Subscriptions in Instant Articles",
-				Optional:            true,
+				Required:            true,
 			},
 		},
 	}
@@ -163,12 +163,12 @@ func (r *ResourceResource) Configure(ctx context.Context, req resource.Configure
 		return
 	}
 
-	client, ok := req.ProviderData.(*PianoProviderData)
+	client, ok := req.ProviderData.(PianoProviderData)
 
 	if !ok {
 		resp.Diagnostics.AddError(
 			"Unexpected Resource Configure Type",
-			fmt.Sprintf("Expected *piano_publisher.Client, got: %T. Please report this issue to the provider developers.", req.ProviderData),
+			fmt.Sprintf("Expected PianoProviderData, got: %T. Please report this issue to the provider developers.", req.ProviderData),
 		)
 
 		return
@@ -179,7 +179,6 @@ func (r *ResourceResource) Configure(ctx context.Context, req resource.Configure
 
 func (r *ResourceResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
 	var state ResourceResourceModel
-
 	resp.Diagnostics.Append(req.Plan.Get(ctx, &state)...)
 
 	if resp.Diagnostics.HasError() {
@@ -187,16 +186,16 @@ func (r *ResourceResource) Create(ctx context.Context, req resource.CreateReques
 	}
 
 	tflog.Info(ctx, fmt.Sprintf("creating resource %s in %s", state.Name.ValueString(), state.Aid.ValueString()))
-
 	response, err := r.client.PostPublisherResourceCreateWithFormdataBody(ctx, piano_publisher.PostPublisherResourceCreateFormdataRequestBody{
 		Aid:         state.Aid.ValueString(),
 		Name:        state.Name.ValueString(),
 		Description: state.Description.ValueStringPointer(),
 	})
 	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to create example, got error: %s", err))
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to create Resource, got error: %s", err))
 		return
 	}
+
 	anyResponse, err := syntax.SuccessfulResponseFrom(response, &resp.Diagnostics)
 	if err != nil {
 		return
@@ -248,6 +247,25 @@ func (r *ResourceResource) Read(ctx context.Context, req resource.ReadRequest, r
 	})
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to fetch resource, got error: %s", err))
+		return
+	}
+	tflog.Info(ctx, fmt.Sprintf("updating resource %s(id:%s) in %s as is_isba_resource must be updated after creating resource", state.Name.ValueString(), state.Rid.ValueString(), state.Aid.ValueString()))
+	request := piano_publisher.PostPublisherResourceUpdateFormdataRequestBody{
+		Aid:            state.Aid.ValueString(),
+		Rid:            state.Rid.ValueString(),
+		Name:           state.Name.ValueStringPointer(),
+		Description:    state.Description.ValueStringPointer(),
+		Disabled:       state.Disabled.ValueBoolPointer(),
+		ExternalId:     state.ExternalId.ValueStringPointer(),
+		ImageUrl:       state.ImageUrl.ValueStringPointer(),
+		IsFbiaResource: state.IsFbiaResource.ValueBoolPointer(),
+		ResourceUrl:    state.ResourceUrl.ValueStringPointer(),
+	}
+
+	response, err = r.client.PostPublisherResourceUpdateWithFormdataBody(ctx, request)
+	if err != nil {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to update resource, got error: %s", err))
+		tflog.Error(ctx, fmt.Sprintf("Unable to update resource(%s): %e", state.Rid, err))
 		return
 	}
 	anyResponse, err := syntax.SuccessfulResponseFrom(response, &resp.Diagnostics)
