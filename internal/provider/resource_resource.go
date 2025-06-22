@@ -195,7 +195,6 @@ func (r *ResourceResource) Create(ctx context.Context, req resource.CreateReques
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to create Resource, got error: %s", err))
 		return
 	}
-
 	anyResponse, err := syntax.SuccessfulResponseFrom(response, &resp.Diagnostics)
 	if err != nil {
 		return
@@ -219,8 +218,9 @@ func (r *ResourceResource) Create(ctx context.Context, req resource.CreateReques
 	state.Name = types.StringValue(result.Resource.Name)
 	if state.Description.IsNull() && result.Resource.Description != nil && *result.Resource.Description == "" {
 		result.Resource.Description = nil
+	} else {
+		state.Description = types.StringPointerValue(result.Resource.Description)
 	}
-	state.Description = types.StringPointerValue(result.Resource.Description)
 	state.ExternalId = types.StringPointerValue(result.Resource.ExternalId)
 	state.ImageUrl = types.StringPointerValue(result.Resource.ImageUrl)
 	state.ResourceUrl = types.StringPointerValue(result.Resource.ResourceUrl)
@@ -228,6 +228,39 @@ func (r *ResourceResource) Create(ctx context.Context, req resource.CreateReques
 	state.Disabled = types.BoolValue(result.Resource.Disabled)
 	// Not-Updatable
 	state.PurchaseUrl = types.StringPointerValue(result.Resource.PurchaseUrl)
+
+	tflog.Info(ctx, fmt.Sprintf("updating Resource(id:%s) %s in %s as is_fbia_resource is not modify-able in create request", state.Rid.ValueString(), state.Name.ValueString(), state.Aid.ValueString()))
+	request := piano_publisher.PostPublisherResourceUpdateFormdataRequestBody{
+		Aid:            state.Aid.ValueString(),
+		Rid:            state.Rid.ValueString(),
+		Name:           state.Name.ValueStringPointer(),
+		Description:    state.Description.ValueStringPointer(),
+		Disabled:       state.Disabled.ValueBoolPointer(),
+		ExternalId:     state.ExternalId.ValueStringPointer(),
+		ImageUrl:       state.ImageUrl.ValueStringPointer(),
+		IsFbiaResource: state.IsFbiaResource.ValueBoolPointer(),
+		ResourceUrl:    state.ResourceUrl.ValueStringPointer(),
+	}
+
+	response, err = r.client.PostPublisherResourceUpdateWithFormdataBody(ctx, request)
+	if err != nil {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to update resource, got error: %s", err))
+		tflog.Error(ctx, fmt.Sprintf("Unable to update resource(%s): %e", state.Rid, err))
+		return
+	}
+
+	anyResponse, err = syntax.SuccessfulResponseFrom(response, &resp.Diagnostics)
+	if err != nil {
+		return
+	}
+
+	result = piano_publisher.ResourceResult{}
+	err = json.Unmarshal(anyResponse.Raw, &result)
+	if err != nil {
+		resp.Diagnostics.AddError("Decode Error", fmt.Sprintf("Unable to decode piano AnyMessage into OK Result, got error: %s", err.Error()))
+		return
+	}
+	state.IsFbiaResource = types.BoolValue(result.Resource.IsFbiaResource)
 
 	tflog.Info(ctx, fmt.Sprintf("complete creating resource %s(id: %s)", state.Name, state.Rid))
 
@@ -247,25 +280,6 @@ func (r *ResourceResource) Read(ctx context.Context, req resource.ReadRequest, r
 	})
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to fetch resource, got error: %s", err))
-		return
-	}
-	tflog.Info(ctx, fmt.Sprintf("updating resource %s(id:%s) in %s as is_isba_resource must be updated after creating resource", state.Name.ValueString(), state.Rid.ValueString(), state.Aid.ValueString()))
-	request := piano_publisher.PostPublisherResourceUpdateFormdataRequestBody{
-		Aid:            state.Aid.ValueString(),
-		Rid:            state.Rid.ValueString(),
-		Name:           state.Name.ValueStringPointer(),
-		Description:    state.Description.ValueStringPointer(),
-		Disabled:       state.Disabled.ValueBoolPointer(),
-		ExternalId:     state.ExternalId.ValueStringPointer(),
-		ImageUrl:       state.ImageUrl.ValueStringPointer(),
-		IsFbiaResource: state.IsFbiaResource.ValueBoolPointer(),
-		ResourceUrl:    state.ResourceUrl.ValueStringPointer(),
-	}
-
-	response, err = r.client.PostPublisherResourceUpdateWithFormdataBody(ctx, request)
-	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to update resource, got error: %s", err))
-		tflog.Error(ctx, fmt.Sprintf("Unable to update resource(%s): %e", state.Rid, err))
 		return
 	}
 	anyResponse, err := syntax.SuccessfulResponseFrom(response, &resp.Diagnostics)
