@@ -26,7 +26,8 @@ terraform {
 
 provider "piano" {
   endpoint  = "https://sandbox.piano.io/api/v3"
-  api_token = "*********************"
+  api_token = var.PIANO_API_TOKEN
+  app_id = var.PIANO_APP_ID
 }
 ```
 
@@ -36,4 +37,5 @@ provider "piano" {
 ### Required
 
 - `api_token` (String) API Token for piano.io API
+- `app_id` (String) App Id for piano.io API
 - `endpoint` (String) Base endpoint for piano.io API
