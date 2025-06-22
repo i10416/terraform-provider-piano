@@ -40,6 +40,7 @@ type PianoProvider struct {
 type PianoProviderModel struct {
 	Endpoint types.String `tfsdk:"endpoint"`
 	ApiToken types.String `tfsdk:"api_token"`
+	AppId    types.String `tfsdk:"app_id"`
 }
 
 type PianoProviderData struct {
@@ -54,17 +55,19 @@ func (p *PianoProvider) Metadata(ctx context.Context, req provider.MetadataReque
 }
 
 func (p *PianoProvider) Schema(ctx context.Context, req provider.SchemaRequest, resp *provider.SchemaResponse) {
-	// ThHis value is `true` for debug purpose
-	required := true
 	resp.Schema = schema.Schema{
 		Attributes: map[string]schema.Attribute{
 			"endpoint": schema.StringAttribute{
 				MarkdownDescription: "Base endpoint for piano.io API",
-				Required:            required,
+				Required:            true,
 			},
 			"api_token": schema.StringAttribute{
 				MarkdownDescription: "API Token for piano.io API",
-				Required:            required,
+				Required:            true,
+			},
+			"app_id": schema.StringAttribute{
+				MarkdownDescription: "App Id for piano.io API",
+				Required:            true,
 			},
 		},
 	}
@@ -94,6 +97,7 @@ func (p *PianoProvider) Configure(ctx context.Context, req provider.ConfigureReq
 	}
 	endpoint := os.Getenv("PIANO_ENDPOINT")
 	apiToken := os.Getenv("PIANO_API_TOKEN")
+	appId := os.Getenv("PIANO_APP_ID")
 
 	if !config.Endpoint.IsNull() {
 		endpoint = config.Endpoint.ValueString()
@@ -104,15 +108,15 @@ func (p *PianoProvider) Configure(ctx context.Context, req provider.ConfigureReq
 
 	tflog.SetField(ctx, "piano_endpoint", endpoint)
 	tflog.SetField(ctx, "piano_api_token", apiToken)
+	tflog.SetField(ctx, "piano_app_id", appId)
 	idEndpoint := fmt.Sprintf("%s/id/api/v1", strings.TrimSuffix(endpoint, "/api/v3"))
-
 	tflog.MaskFieldValuesWithFieldKeys(ctx, "piano_api_token")
 	idClient, err := piano_id.NewClient(idEndpoint, func(client *piano_id.Client) error {
 		client.RequestEditors = append(client.RequestEditors, func(ctx context.Context, req *http.Request) error {
 			copied := req.URL.Query()
 			copied.Add("api_token", apiToken)
+			copied.Add("aid", appId)
 			req.URL.RawQuery = copied.Encode()
-			req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", apiToken))
 			return nil
 		})
 		return nil
@@ -152,6 +156,7 @@ func (p *PianoProvider) Resources(ctx context.Context) []func() resource.Resourc
 		NewOfferResource,
 		NewOfferTermBindingResource,
 		NewOfferTermOrderResource,
+		NewCustomFieldResource,
 	}
 }
 

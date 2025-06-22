@@ -16,54 +16,62 @@ import (
 
 // Defines values for CustomFieldDefinitionDataType.
 const (
-	CustomFieldDefinitionDataTypeBOOLEAN          CustomFieldDefinitionDataType = "BOOLEAN"
-	CustomFieldDefinitionDataTypeISODATE          CustomFieldDefinitionDataType = "ISO_DATE"
-	CustomFieldDefinitionDataTypeMULTISELECTLIST  CustomFieldDefinitionDataType = "MULTI_SELECT_LIST"
-	CustomFieldDefinitionDataTypeSINGLESELECTLIST CustomFieldDefinitionDataType = "SINGLE_SELECT_LIST"
-	CustomFieldDefinitionDataTypeTEXT             CustomFieldDefinitionDataType = "TEXT"
+	BOOLEAN          CustomFieldDefinitionDataType = "BOOLEAN"
+	ISODATE          CustomFieldDefinitionDataType = "ISO_DATE"
+	MULTISELECTLIST  CustomFieldDefinitionDataType = "MULTI_SELECT_LIST"
+	SINGLESELECTLIST CustomFieldDefinitionDataType = "SINGLE_SELECT_LIST"
+	TEXT             CustomFieldDefinitionDataType = "TEXT"
 )
 
-// Defines values for PostPublisherCustomFieldResponseItemDataType.
-const (
-	PostPublisherCustomFieldResponseItemDataTypeBOOLEAN          PostPublisherCustomFieldResponseItemDataType = "BOOLEAN"
-	PostPublisherCustomFieldResponseItemDataTypeISODATE          PostPublisherCustomFieldResponseItemDataType = "ISO_DATE"
-	PostPublisherCustomFieldResponseItemDataTypeMULTISELECTLIST  PostPublisherCustomFieldResponseItemDataType = "MULTI_SELECT_LIST"
-	PostPublisherCustomFieldResponseItemDataTypeSINGLESELECTLIST PostPublisherCustomFieldResponseItemDataType = "SINGLE_SELECT_LIST"
-	PostPublisherCustomFieldResponseItemDataTypeTEXT             PostPublisherCustomFieldResponseItemDataType = "TEXT"
-)
+// CustomFieldAttribute defines model for CustomFieldAttribute.
+type CustomFieldAttribute struct {
+	DefaultValue *string `json:"default_value,omitempty"`
+
+	// Multiline Whether or not TEXT field allows multiline input
+	Multiline *bool `json:"multiline,omitempty"`
+}
 
 // CustomFieldDefinition defines model for CustomFieldDefinition.
 type CustomFieldDefinition struct {
-	Archived  bool                          `json:"archived"`
-	Comment   *string                       `json:"comment"`
-	DataType  CustomFieldDefinitionDataType `json:"data_type"`
-	Editable  bool                          `json:"editable"`
-	FieldName string                        `json:"field_name"`
-	Title     string                        `json:"title"`
+	Archived          bool                          `json:"archived"`
+	Attribute         CustomFieldAttribute          `json:"attribute"`
+	Comment           *string                       `json:"comment"`
+	DataType          CustomFieldDefinitionDataType `json:"data_type"`
+	DefaultSortOrder  *int32                        `json:"default_sort_order"`
+	Editable          bool                          `json:"editable"`
+	FieldName         string                        `json:"field_name"`
+	Options           []string                      `json:"options"`
+	RequiredByDefault bool                          `json:"required_by_default"`
+	Title             string                        `json:"title"`
+	Tooltip           *Tooltip                      `json:"tooltip,omitempty"`
+	Validators        []string                      `json:"validators"`
 }
 
 // CustomFieldDefinitionDataType defines model for CustomFieldDefinition.DataType.
 type CustomFieldDefinitionDataType string
 
+// PianoIDErrorDetail defines model for PianoIDErrorDetail.
+type PianoIDErrorDetail struct {
+	ErrorCodeList []PianoIDErrorDetailItem `json:"error_code_list"`
+}
+
+// PianoIDErrorDetailItem defines model for PianoIDErrorDetailItem.
+type PianoIDErrorDetailItem struct {
+	Message string `json:"message"`
+}
+
 // PostPublisherCustomFieldRequest defines model for PostPublisherCustomFieldRequest.
 type PostPublisherCustomFieldRequest = []CustomFieldDefinition
 
 // PostPublisherCustomFieldResponse defines model for PostPublisherCustomFieldResponse.
-type PostPublisherCustomFieldResponse = []PostPublisherCustomFieldResponseItem
+type PostPublisherCustomFieldResponse = []CustomFieldDefinition
 
-// PostPublisherCustomFieldResponseItem defines model for PostPublisherCustomFieldResponseItem.
-type PostPublisherCustomFieldResponseItem struct {
-	Archived  bool                                         `json:"archived"`
-	Comment   *string                                      `json:"comment"`
-	Created   string                                       `json:"created"`
-	DataType  PostPublisherCustomFieldResponseItemDataType `json:"dataType"`
-	Editable  bool                                         `json:"editable"`
-	FieldName string                                       `json:"fieldName"`
-	Title     string                                       `json:"title"`
+// Tooltip defines model for Tooltip.
+type Tooltip struct {
+	Enabled *bool   `json:"enabled,omitempty"`
+	Text    *string `json:"text,omitempty"`
+	Type    *string `json:"type,omitempty"`
 }
-
-// PostPublisherCustomFieldResponseItemDataType defines model for PostPublisherCustomFieldResponseItem.DataType.
-type PostPublisherCustomFieldResponseItemDataType string
 
 // PublisherCustomFieldPostJSONRequestBody defines body for PublisherCustomFieldPost for application/json ContentType.
 type PublisherCustomFieldPostJSONRequestBody = PostPublisherCustomFieldRequest
@@ -264,6 +272,7 @@ type PublisherCustomFieldPostResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *PostPublisherCustomFieldResponse
+	JSONDefault  *PianoIDErrorDetail
 }
 
 // Status returns HTTPResponse.Status
@@ -319,6 +328,13 @@ func ParsePublisherCustomFieldPostResponse(rsp *http.Response) (*PublisherCustom
 			return nil, err
 		}
 		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
+		var dest PianoIDErrorDetail
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
 
 	}
 

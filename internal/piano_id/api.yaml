@@ -27,24 +27,65 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PostPublisherCustomFieldResponse'
+          required: true
+        default:
+          description: default response(error)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PianoIDErrorDetail'
 components:
   schemas:
     PostPublisherCustomFieldRequest:
       type: array
       items:
         $ref: '#/components/schemas/CustomFieldDefinition'
+        required: true
+    PostPublisherCustomFieldResponse:
+      type: array
+      items:
+        $ref: '#/components/schemas/CustomFieldDefinition'
+        required: true
+    PianoIDErrorDetail:
+      type: object
+      required:
+        - error_code_list
+      properties:
+        error_code_list:
+          type: array
+          items:
+            $ref: '#/components/schemas/PianoIDErrorDetailItem'
+    PianoIDErrorDetailItem:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
     CustomFieldDefinition:
       type: object
       required:
         - field_name
-        - data_type
         - title
-        - editable
         - comment
+        - editable
+        - data_type
+        - options
+        - required_by_default
         - archived
+        - default_sort_order
+        - attribute
+        - validators
       properties:
         field_name:
           type: string
+        title:
+          type: string
+        comment:
+          type: string
+          nullable: true
+        editable:
+          type: boolean
         data_type:
           type: string
           enum:
@@ -53,50 +94,44 @@ components:
             - BOOLEAN
             - SINGLE_SELECT_LIST
             - MULTI_SELECT_LIST
-        title:
-          type: string
-        editable:
+        options:
+          type: array
+          items:
+            type: string
+        required_by_default:
           type: boolean
-        comment:
-          type: string
-          nullable: true
         archived:
           type: boolean
-    PostPublisherCustomFieldResponse:
-      type: array
-      items:
-        $ref: '#/components/schemas/PostPublisherCustomFieldResponseItem'
-    PostPublisherCustomFieldResponseItem:
+        default_sort_order:
+          type: integer
+          format: int32
+          nullable: true
+        attribute:
+          $ref: '#/components/schemas/CustomFieldAttribute'
+          nullable: true
+        tooltip:
+          $ref: '#/components/schemas/Tooltip'
+          nullable: true
+        validators:
+          description: This value must not be null in every request. Without this field, server ends up with internal server error.
+          type: array
+          items:
+            type: string
+    CustomFieldAttribute:
+      type: object
+      properties:
+        default_value:
+          type: string
+        multiline:
+          description: Whether or not TEXT field allows multiline input
+          type: boolean
+    Tooltip:
       type: object
       required:
-        - fieldName
-        - created
-        - dataType
-        - comment
-        - editable
-        - archived
-        - title
       properties:
-        fieldName:
+        type:
           type: string
-        created:
-          type: string
-        dataType:
-          type: string
-          enum:
-            - TEXT
-            - ISO_DATE
-            - BOOLEAN
-            - SINGLE_SELECT_LIST
-            - MULTI_SELECT_LIST
-        comment:
-          type: string
-          nullable: true
-        editable:
+        enabled:
           type: boolean
-        archived:
-          type: boolean
-        title:
+        text:
           type: string
-
-
