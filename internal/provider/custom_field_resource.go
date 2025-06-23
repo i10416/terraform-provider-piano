@@ -102,7 +102,7 @@ func (*CustomFieldResource) Schema(ctx context.Context, req resource.SchemaReque
 				},
 				Validators: []validator.String{
 					stringvalidator.OneOf(
-						"BOOLEAN", "TEXT", "ISO_DATE", "SINGLE_SELECT_LIST", "MULTI_SELECT_LIST",
+						"BOOLEAN", "TEXT", "NUMBER", "ISO_DATE", "SINGLE_SELECT_LIST", "MULTI_SELECT_LIST",
 					),
 				},
 				MarkdownDescription: "Piano ID custom field type",
