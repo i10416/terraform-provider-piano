@@ -142,7 +142,7 @@ func (p *PianoProvider) Configure(ctx context.Context, req provider.ConfigureReq
 	}
 
 	resp.ResourceData = providerData
-	resp.ResourceData = providerData
+	resp.DataSourceData = providerData
 }
 
 func (p *PianoProvider) Resources(ctx context.Context) []func() resource.Resource {
