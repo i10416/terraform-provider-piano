@@ -353,9 +353,9 @@ func (r *CustomFieldResource) Create(ctx context.Context, req resource.CreateReq
 			state.LengthValidator.ErrorMessage = types.StringPointerValue(validator.ReponseErrorMessage)
 		} else if string(validator.Type) == "REGEXP" && state.RegexValidator != nil {
 			state.RegexValidator.Pattern = types.StringPointerValue(validator.Params.Regexp)
-			state.LengthValidator.ErrorMessage = types.StringPointerValue(validator.ReponseErrorMessage)
+			state.RegexValidator.ErrorMessage = types.StringPointerValue(validator.ReponseErrorMessage)
 		} else if string(validator.Type) == "EMAIL" && state.EmailValidator != nil {
-			state.LengthValidator.ErrorMessage = types.StringPointerValue(validator.ReponseErrorMessage)
+			state.EmailValidator.ErrorMessage = types.StringPointerValue(validator.ReponseErrorMessage)
 		} else if string(validator.Type) == "WHITELIST" && state.AllowListValidator != nil {
 			items := []types.String{}
 			if validator.Params.Whitelist != nil {
@@ -364,7 +364,7 @@ func (r *CustomFieldResource) Create(ctx context.Context, req resource.CreateReq
 				}
 			}
 			state.AllowListValidator.Items = items
-			state.LengthValidator.ErrorMessage = types.StringPointerValue(validator.ReponseErrorMessage)
+			state.AllowListValidator.ErrorMessage = types.StringPointerValue(validator.ReponseErrorMessage)
 		} else if string(validator.Type) == "BLACKLIST" && state.DenyListValidator != nil {
 			items := []types.String{}
 			if validator.Params.Blacklist != nil {
@@ -374,7 +374,7 @@ func (r *CustomFieldResource) Create(ctx context.Context, req resource.CreateReq
 			}
 
 			state.DenyListValidator.Items = items
-			state.LengthValidator.ErrorMessage = types.StringPointerValue(validator.ReponseErrorMessage)
+			state.DenyListValidator.ErrorMessage = types.StringPointerValue(validator.ReponseErrorMessage)
 		} else {
 			// exaustiveness
 		}
