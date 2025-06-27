@@ -3,12 +3,12 @@
 page_title: "piano_unsafe_custom_field Resource - piano"
 subcategory: ""
 description: |-
-  This is a custom field resource. This resource is unsafe in that it always creates or updates resources because piano id API does not provide a way of getting custom field without mutating it
+  This is a custom field resource. This resource is unsafe in that it always creates or updates resources because piano id API does not provide a way of getting custom field without mutating it.
 ---
 
 # piano_unsafe_custom_field (Resource)
 
-This is a custom field resource. This resource is unsafe in that it always creates or updates resources because piano id API does not provide a way of getting custom field without mutating it
+This is a custom field resource. This resource is unsafe in that it always creates or updates resources because piano id API does not provide a way of getting custom field without mutating it.
 
 
 
@@ -19,6 +19,12 @@ This is a custom field resource. This resource is unsafe in that it always creat
 
 - `aid` (String) The application ID
 - `data_type` (String) Piano ID custom field type
+  - TEXT: You can prompt the user with a free-form text box. This is often ideal for collecting text responses that don't fit neatly within or can't be captured by a list of options. Note that capitalization is disregarded when performing operations on text fields. The Mine Users search based on a text custom field is limited to 4000 characters.
+  - ISO_DATE: A date field can be used for collecting birthdays or other anniversaries. A default date format can be set to display to users.
+  - NUMBER: Number fields are also presented as a free-form text box, but all entries must be integers so mathematical comparisons can be applied.
+  - BOOLEAN: Checkbox fields can be presented if, for instance, you would like to ask a user if they wish to subscribe to your newsletter. These are not meant to replace Consent Fields, but can be used for consent purposes if you wish to set consents on custom forms.
+  - SINGLE_SELECT_LIST: You can create a set list of options, of which the user can choose one.
+  - MULTI_SELECT_LIST: You can create a set list of options, of which the user can choose multiple.
 - `editable` (Boolean) Piano ID custom field editability
 - `field_name` (String) Piano ID custom field name, which serves as an identifier for custom field
 - `required_by_default` (Boolean) Piano ID custom field archive status(default: false)
@@ -32,15 +38,19 @@ This is a custom field resource. This resource is unsafe in that it always creat
 - `default_sort_order` (Number) Piano ID custom field default sort order
 - `default_value` (String) Piano ID custom field default value
 - `deny_list_validator` (Object) Specify the deny list of possible inputs (see [below for nested schema](#nestedatt--deny_list_validator))
-- `email_validator` (Object) Check if the input conforms to valid email format (see [below for nested schema](#nestedatt--email_validator))
+- `email_validator` (Object) Check if the input conforms to valid email format.
+Checking this box ensures that the content entered by the user is in the form of an email address, meaning it contains an '@' symbol and ends in a top-level domain name. (see [below for nested schema](#nestedatt--email_validator))
 - `global` (Boolean) Whether or not this field is a global field
-- `length_validator` (Object) Check if the input length fits between the min_length and max_length (see [below for nested schema](#nestedatt--length_validator))
+- `length_validator` (Object) Check if the input length fits between the min_length and max_length.
+Any user with a response outside of this range will be shown the error message you configure. (see [below for nested schema](#nestedatt--length_validator))
 - `multiline` (Boolean) Piano ID custom field multiline setting for TEXT data type
 - `options` (List of String) Piano ID custom field select options
-- `placeholder` (String) The placeholder for TEXT or SINGLE_SELECT_LIST field
+- `placeholder` (String) The placeholder for TEXT or SINGLE_SELECT_LIST field. 
+The placeholder will appear to the end user before they begin inputting their response to the field, as an example.
 - `pre_select_country_by_ip` (Boolean) Whether or not select country by ip for country field. Default is false.
 - `prechecked` (Boolean) Check the checkbox(Boolean field) by default
-- `regex_validator` (Object) Check if the input matches the given regular expression (see [below for nested schema](#nestedatt--regex_validator))
+- `regex_validator` (Object) Check if the input matches the given regular expression.
+You may specify the type of characters you would like to support as well as any particular format that is required. (see [below for nested schema](#nestedatt--regex_validator))
 - `validators` (List of String) Piano ID custom field validators
 
 ### Read-Only
