@@ -26,13 +26,67 @@ This is a custom field resource. This resource is unsafe in that it always creat
 
 ### Optional
 
+- `allow_list_validator` (Object) Specify the allow list of possible inputs (see [below for nested schema](#nestedatt--allow_list_validator))
 - `comment` (String) Piano ID custom field internal comment
+- `date_format` (String) The format for ISO_DATE field
 - `default_sort_order` (Number) Piano ID custom field default sort order
 - `default_value` (String) Piano ID custom field default value
+- `deny_list_validator` (Object) Specify the deny list of possible inputs (see [below for nested schema](#nestedatt--deny_list_validator))
+- `email_validator` (Object) Check if the input conforms to valid email format (see [below for nested schema](#nestedatt--email_validator))
+- `global` (Boolean) Whether or not this field is a global field
+- `length_validator` (Object) Check if the input length fits between the min_length and max_length (see [below for nested schema](#nestedatt--length_validator))
 - `multiline` (Boolean) Piano ID custom field multiline setting for TEXT data type
 - `options` (List of String) Piano ID custom field select options
+- `placeholder` (String) The placeholder for TEXT or SINGLE_SELECT_LIST field
+- `pre_select_country_by_ip` (Boolean) Whether or not select country by ip for country field. Default is false.
+- `prechecked` (Boolean) Check the checkbox(Boolean field) by default
+- `regex_validator` (Object) Check if the input matches the given regular expression (see [below for nested schema](#nestedatt--regex_validator))
 - `validators` (List of String) Piano ID custom field validators
 
 ### Read-Only
 
 - `archived` (Boolean) Piano ID custom field archive status(default: false)
+
+<a id="nestedatt--allow_list_validator"></a>
+### Nested Schema for `allow_list_validator`
+
+Optional:
+
+- `error_message` (String)
+- `items` (List of String)
+
+
+<a id="nestedatt--deny_list_validator"></a>
+### Nested Schema for `deny_list_validator`
+
+Optional:
+
+- `error_message` (String)
+- `items` (List of String)
+
+
+<a id="nestedatt--email_validator"></a>
+### Nested Schema for `email_validator`
+
+Optional:
+
+- `error_message` (String)
+
+
+<a id="nestedatt--length_validator"></a>
+### Nested Schema for `length_validator`
+
+Optional:
+
+- `error_message` (String)
+- `max_length` (Number)
+- `min_length` (Number)
+
+
+<a id="nestedatt--regex_validator"></a>
+### Nested Schema for `regex_validator`
+
+Optional:
+
+- `error_message` (String)
+- `pattern` (String)

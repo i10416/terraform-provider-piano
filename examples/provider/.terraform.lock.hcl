@@ -1,0 +1,25 @@
+# This file is maintained automatically by "terraform init".
+# Manual edits may be lost in future updates.
+
+provider "registry.terraform.io/i10416/piano" {
+  version     = "0.1.10"
+  constraints = "~> 0.1.3"
+  hashes = [
+    "h1:4leo78uZZKoLkqQX3sW/9LXwlRye8B9zcRJQs3nSPzw=",
+    "zh:0c8c30ff47cf84a8ec4af74998e34e8fe5262162ba20046b58563e0716950d3d",
+    "zh:197aded981b1a9753bb5c9d5ebcd901000a41d6e8cea74274eed4f40d72b4696",
+    "zh:300691d78aa9a424830265d8f043852f9a984ec28538ed11fc91119c5d21de21",
+    "zh:372f60b634cf9fe8e953b6b03546c83496aef2922a18e588132a4b3bd70a99ce",
+    "zh:890df766e9b839623b1f0437355032a3c006226a6c200cd911e15ee1a9014e9f",
+    "zh:8eab57aca015a42110acf9d848b67295c0c44fde2438733dfba6524576ef5831",
+    "zh:9dec95a12b29ec86a3deab063eead06121e52995af25e3e56f23d6b143295d78",
+    "zh:ad6391ca585889fcfefeecb432955659bee52215d94a58c1da9b525afcc8f059",
+    "zh:b73077fa550266f5667d8d27677e563a78e38369a1ce4527e3305f1ff60b7bf8",
+    "zh:bb8e6e9580895778804275259b899aa0fd5b8ca635519df7cc0cac23ff7219c0",
+    "zh:beb0c51fb2887e263558b6f6820049d354be91ce210c312db404df6d25a6e8a5",
+    "zh:c4d5579ef6e8ec56f2dd31669aa0d080c6d036b9f21c15eba71964909d3974a8",
+    "zh:f54fb2e96cbcf1ead72efc561961bb5683cf688988d9a19c60435c72449e3426",
+    "zh:f967916b9dc77d9c98676e9d063edc33bb4c3f2f8ffffed8bf5ead516090ea8d",
+    "zh:fb76b5f8e75ee58ed09a3e75c96c48b9c80bc9acd3fd5166859749e50f7db8f0",
+  ]
+}
