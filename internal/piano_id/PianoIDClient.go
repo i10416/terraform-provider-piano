@@ -14,6 +14,18 @@ import (
 	"strings"
 )
 
+// Defines values for CustomFieldAttributeDateFormat.
+const (
+	DdMmYyyy CustomFieldAttributeDateFormat = "dd.mm.yyyy"
+	Ddmmyyyy CustomFieldAttributeDateFormat = "dd/mm/yyyy"
+	MmDdYyyy CustomFieldAttributeDateFormat = "mm.dd.yyyy"
+	Mmddyyyy CustomFieldAttributeDateFormat = "mm/dd/yyyy"
+	YyyyDdMm CustomFieldAttributeDateFormat = "yyyy.dd.mm"
+	YyyyMmDd CustomFieldAttributeDateFormat = "yyyy.mm.dd"
+	Yyyyddmm CustomFieldAttributeDateFormat = "yyyy/dd/mm"
+	Yyyymmdd CustomFieldAttributeDateFormat = "yyyy/mm/dd"
+)
+
 // Defines values for CustomFieldDefinitionDataType.
 const (
 	BOOLEAN          CustomFieldDefinitionDataType = "BOOLEAN"
@@ -23,32 +35,80 @@ const (
 	TEXT             CustomFieldDefinitionDataType = "TEXT"
 )
 
+// Defines values for CustomFieldDefinitionFavouriteOptions.
+const (
+	Prechecked CustomFieldDefinitionFavouriteOptions = "prechecked"
+)
+
+// Defines values for ValidatorType.
+const (
+	BLACKLIST ValidatorType = "BLACKLIST"
+	EMAIL     ValidatorType = "EMAIL"
+	REGEXP    ValidatorType = "REGEXP"
+	STRLENGTH ValidatorType = "STR_LENGTH"
+	WHITELIST ValidatorType = "WHITELIST"
+)
+
 // CustomFieldAttribute defines model for CustomFieldAttribute.
 type CustomFieldAttribute struct {
-	DefaultValue *string `json:"default_value,omitempty"`
+	// DateFormat The format of ISO_DATE field. Default is null
+	DateFormat *CustomFieldAttributeDateFormat `json:"date_format"`
 
-	// Multiline Whether or not TEXT field allows multiline input
+	// DefaultValue The default value for this field.
+	DefaultValue *string `json:"default_value"`
+
+	// Global Whether or not this field is a global field. Default is false.
+	Global *bool `json:"global,omitempty"`
+
+	// Multiline Whether or not the TEXT field allows multiline input
 	Multiline *bool `json:"multiline,omitempty"`
+
+	// Placeholder The placeholder of this field. Avaiable for TEXT or SINGLE_SELECT_LIST field
+	Placeholder *string `json:"placeholder"`
+
+	// PreSelectCountryByIp Whether or not select country by ip for country field. Default is false.
+	PreSelectCountryByIp *bool `json:"pre_select_country_by_ip,omitempty"`
 }
+
+// CustomFieldAttributeDateFormat The format of ISO_DATE field. Default is null
+type CustomFieldAttributeDateFormat string
 
 // CustomFieldDefinition defines model for CustomFieldDefinition.
 type CustomFieldDefinition struct {
-	Archived          bool                          `json:"archived"`
-	Attribute         CustomFieldAttribute          `json:"attribute"`
-	Comment           *string                       `json:"comment"`
-	DataType          CustomFieldDefinitionDataType `json:"data_type"`
-	DefaultSortOrder  *int32                        `json:"default_sort_order"`
-	Editable          bool                          `json:"editable"`
-	FieldName         string                        `json:"field_name"`
-	Options           []string                      `json:"options"`
-	RequiredByDefault bool                          `json:"required_by_default"`
-	Title             string                        `json:"title"`
-	Tooltip           *Tooltip                      `json:"tooltip,omitempty"`
-	Validators        []string                      `json:"validators"`
+	// Archived Whether or not this field is archived.
+	Archived  bool                 `json:"archived"`
+	Attribute CustomFieldAttribute `json:"attribute"`
+
+	// Comment The internal comment about this field. This is NOT visible to users.
+	Comment          *string                       `json:"comment"`
+	DataType         CustomFieldDefinitionDataType `json:"data_type"`
+	DefaultSortOrder *int32                        `json:"default_sort_order"`
+	Editable         bool                          `json:"editable"`
+
+	// FavouriteOptions Extra options for the field.
+	// - "prechecked": check the checkbox(Boolean field) by default
+	FavouriteOptions *[]CustomFieldDefinitionFavouriteOptions `json:"favourite_options,omitempty"`
+
+	// FieldName The field name of this custom field.
+	// This value serves as an identifier for the field.
+	FieldName         string   `json:"field_name"`
+	Options           []string `json:"options"`
+	RequiredByDefault bool     `json:"required_by_default"`
+
+	// Title The title of this field. This field is visible to users.
+	Title   string   `json:"title"`
+	Tooltip *Tooltip `json:"tooltip,omitempty"`
+
+	// Validators This value must not be null in every request.
+	// Without this field, server ends up with internal server error.
+	Validators []Validator `json:"validators"`
 }
 
 // CustomFieldDefinitionDataType defines model for CustomFieldDefinition.DataType.
 type CustomFieldDefinitionDataType string
+
+// CustomFieldDefinitionFavouriteOptions defines model for CustomFieldDefinition.FavouriteOptions.
+type CustomFieldDefinitionFavouriteOptions string
 
 // PianoIDErrorDetail defines model for PianoIDErrorDetail.
 type PianoIDErrorDetail struct {
@@ -71,6 +131,38 @@ type Tooltip struct {
 	Enabled *bool   `json:"enabled,omitempty"`
 	Text    *string `json:"text,omitempty"`
 	Type    *string `json:"type,omitempty"`
+}
+
+// Validator defines model for Validator.
+type Validator struct {
+	// ErrorMessage Error message field __for request__
+	ErrorMessage *string `json:"errorMessage"`
+
+	// ReponseErrorMessage Error message field __for response__
+	ReponseErrorMessage *string            `json:"error_message"`
+	Params              ValidatorParameter `json:"params"`
+	Type                ValidatorType      `json:"type"`
+}
+
+// ValidatorType defines model for Validator.Type.
+type ValidatorType string
+
+// ValidatorParameter defines model for ValidatorParameter.
+type ValidatorParameter struct {
+	// Blacklist The list of string for BLACKLIST validator
+	Blacklist *[]string `json:"blacklist,omitempty"`
+
+	// MaxLength The max length of text for STR_LENGTH validator
+	MaxLength *int32 `json:"maxLength,omitempty"`
+
+	// MinLength The min length of text for STR_LENGTH validator
+	MinLength *int32 `json:"minLength,omitempty"`
+
+	// Regexp The regular expression for REGEXP validator
+	Regexp *string `json:"regexp,omitempty"`
+
+	// Whitelist The list of string for WHITELIST validator
+	Whitelist *[]string `json:"whitelist,omitempty"`
 }
 
 // PublisherCustomFieldPostJSONRequestBody defines body for PublisherCustomFieldPost for application/json ContentType.
