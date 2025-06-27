@@ -104,7 +104,7 @@ type DenyListValidator struct {
 func (*CustomFieldResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "This is a custom field resource. This resource is unsafe in that it always creates or updates resources" +
-			" because piano id API does not provide a way of getting custom field without mutating it",
+			" because piano id API does not provide a way of getting custom field without mutating it.",
 		Attributes: map[string]schema.Attribute{
 			"aid": schema.StringAttribute{
 				Required:            true,
@@ -139,7 +139,13 @@ func (*CustomFieldResource) Schema(ctx context.Context, req resource.SchemaReque
 						"BOOLEAN", "TEXT", "NUMBER", "ISO_DATE", "SINGLE_SELECT_LIST", "MULTI_SELECT_LIST",
 					),
 				},
-				MarkdownDescription: "Piano ID custom field type",
+				MarkdownDescription: "Piano ID custom field type\n" +
+					"  - TEXT: You can prompt the user with a free-form text box. This is often ideal for collecting text responses that don't fit neatly within or can't be captured by a list of options. Note that capitalization is disregarded when performing operations on text fields. The Mine Users search based on a text custom field is limited to 4000 characters.\n" +
+					"  - ISO_DATE: A date field can be used for collecting birthdays or other anniversaries. A default date format can be set to display to users.\n" +
+					"  - NUMBER: Number fields are also presented as a free-form text box, but all entries must be integers so mathematical comparisons can be applied.\n" +
+					"  - BOOLEAN: Checkbox fields can be presented if, for instance, you would like to ask a user if they wish to subscribe to your newsletter. These are not meant to replace Consent Fields, but can be used for consent purposes if you wish to set consents on custom forms.\n" +
+					"  - SINGLE_SELECT_LIST: You can create a set list of options, of which the user can choose one.\n" +
+					"  - MULTI_SELECT_LIST: You can create a set list of options, of which the user can choose multiple.",
 			},
 			"options": schema.ListAttribute{
 				ElementType:         types.StringType,
@@ -167,8 +173,9 @@ func (*CustomFieldResource) Schema(ctx context.Context, req resource.SchemaReque
 				MarkdownDescription: "Check the checkbox(Boolean field) by default",
 			},
 			"placeholder": schema.StringAttribute{
-				Optional:            true,
-				MarkdownDescription: "The placeholder for TEXT or SINGLE_SELECT_LIST field",
+				Optional: true,
+				MarkdownDescription: "The placeholder for TEXT or SINGLE_SELECT_LIST field. \n" +
+					"The placeholder will appear to the end user before they begin inputting their response to the field, as an example.",
 			},
 			"date_format": schema.StringAttribute{
 				Optional:            true,
@@ -204,8 +211,9 @@ func (*CustomFieldResource) Schema(ctx context.Context, req resource.SchemaReque
 				MarkdownDescription: "Piano ID custom field validators",
 			},
 			"length_validator": schema.ObjectAttribute{
-				Optional:            true,
-				MarkdownDescription: "Check if the input length fits between the min_length and max_length",
+				Optional: true,
+				MarkdownDescription: "Check if the input length fits between the min_length and max_length.\n" +
+					"Any user with a response outside of this range will be shown the error message you configure.",
 				AttributeTypes: map[string]attr.Type{
 					"min_length":    types.Int32Type,
 					"max_length":    types.Int32Type,
@@ -213,16 +221,18 @@ func (*CustomFieldResource) Schema(ctx context.Context, req resource.SchemaReque
 				},
 			},
 			"regex_validator": schema.ObjectAttribute{
-				Optional:            true,
-				MarkdownDescription: "Check if the input matches the given regular expression",
+				Optional: true,
+				MarkdownDescription: "Check if the input matches the given regular expression.\n" +
+					"You may specify the type of characters you would like to support as well as any particular format that is required.",
 				AttributeTypes: map[string]attr.Type{
 					"pattern":       types.StringType,
 					"error_message": types.StringType,
 				},
 			},
 			"email_validator": schema.ObjectAttribute{
-				Optional:            true,
-				MarkdownDescription: "Check if the input conforms to valid email format",
+				Optional: true,
+				MarkdownDescription: "Check if the input conforms to valid email format.\n" +
+					"Checking this box ensures that the content entered by the user is in the form of an email address, meaning it contains an '@' symbol and ends in a top-level domain name.",
 				AttributeTypes: map[string]attr.Type{
 					"error_message": types.StringType,
 				},
