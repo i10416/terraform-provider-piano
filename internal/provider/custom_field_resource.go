@@ -457,12 +457,12 @@ func (r *CustomFieldResource) Update(ctx context.Context, req resource.UpdateReq
 		if string(validator.Type) == "STR_LENGTH" && state.LengthValidator != nil {
 			state.LengthValidator.MinLength = types.Int32PointerValue(validator.Params.MinLength)
 			state.LengthValidator.MaxLength = types.Int32PointerValue(validator.Params.MaxLength)
-			state.LengthValidator.ErrorMessage = types.StringValue(*validator.ErrorMessage)
+			state.LengthValidator.ErrorMessage = types.StringPointerValue(validator.ReponseErrorMessage)
 		} else if string(validator.Type) == "REGEXP" && state.RegexValidator != nil {
 			state.RegexValidator.Pattern = types.StringPointerValue(validator.Params.Regexp)
-			state.RegexValidator.ErrorMessage = types.StringValue(*validator.ErrorMessage)
+			state.RegexValidator.ErrorMessage = types.StringPointerValue(validator.ReponseErrorMessage)
 		} else if string(validator.Type) == "EMAIL" && state.EmailValidator != nil {
-			state.EmailValidator.ErrorMessage = types.StringValue(*validator.ErrorMessage)
+			state.EmailValidator.ErrorMessage = types.StringPointerValue(validator.ReponseErrorMessage)
 		} else if string(validator.Type) == "WHITELIST" && state.AllowListValidator != nil {
 			items := []types.String{}
 			if validator.Params.Whitelist != nil {
@@ -472,7 +472,7 @@ func (r *CustomFieldResource) Update(ctx context.Context, req resource.UpdateReq
 			}
 
 			state.AllowListValidator.Items = items
-			state.AllowListValidator.ErrorMessage = types.StringValue(*validator.ErrorMessage)
+			state.AllowListValidator.ErrorMessage = types.StringPointerValue(validator.ReponseErrorMessage)
 		} else if string(validator.Type) == "BLACKLIST" && state.DenyListValidator != nil {
 			items := []types.String{}
 			if validator.Params.Blacklist != nil {
@@ -482,7 +482,7 @@ func (r *CustomFieldResource) Update(ctx context.Context, req resource.UpdateReq
 			}
 
 			state.DenyListValidator.Items = items
-			state.DenyListValidator.ErrorMessage = types.StringValue(*validator.ErrorMessage)
+			state.DenyListValidator.ErrorMessage = types.StringPointerValue(validator.ReponseErrorMessage)
 		} else {
 			// exaustiveness
 		}
