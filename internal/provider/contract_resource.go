@@ -36,9 +36,9 @@ type ContractResourceModel struct {
 	Name         types.String `tfsdk:"name"`
 
 	// Computed
-	CreateDate       types.Int64 `tfsdk:"create_date"`
-	ContractIsActive types.Bool  `tfsdk:"contract_is_active"`
-
+	CreateDate       types.Int64  `tfsdk:"create_date"`
+	ContractIsActive types.Bool   `tfsdk:"contract_is_active"`
+	ScheduleId       types.String `tfsdk:"schedule_id"`
 	// Optional
 	Description          types.String `tfsdk:"description"`
 	LandingPageUrl       types.String `tfsdk:"landing_page_url"`
@@ -110,6 +110,11 @@ func (*ContractResource) Schema(ctx context.Context, req resource.SchemaRequest,
 				Optional:            true,
 				PlanModifiers:       []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
 				MarkdownDescription: "The relative URL of the contract. It will be appended to the licensing base URL to get the complete landing page URL",
+			},
+			"schedule_id": schema.StringAttribute{
+				Optional:            true,
+				PlanModifiers:       []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+				MarkdownDescription: "Schedule ID",
 			},
 			"seats_number": schema.Int32Attribute{
 				Required:            true,
@@ -242,6 +247,7 @@ func (r *ContractResource) Read(ctx context.Context, req resource.ReadRequest, r
 	state.ContractIsActive = types.BoolValue(result.Contract.ContractIsActive)
 	state.ContractType = types.StringValue(string(result.Contract.ContractType))
 	state.LandingPageUrl = types.StringValue(result.Contract.LandingPageUrl)
+	state.ScheduleId = types.StringPointerValue(result.Contract.ScheduleId)
 	state.LicenseeId = types.StringValue(result.Contract.LicenseeId)
 	state.SeatsNumber = types.Int32Value(result.Contract.SeatsNumber)
 	state.IsHardSeatsLimitType = types.BoolValue(result.Contract.IsHardSeatsLimitType)
@@ -266,6 +272,7 @@ func (r *ContractResource) Update(ctx context.Context, req resource.UpdateReques
 		SeatsNumber:          state.SeatsNumber.ValueInt32(),
 		IsHardSeatsLimitType: state.IsHardSeatsLimitType.ValueBool(),
 		ContractName:         state.Name.ValueString(),
+		ScheduleId:           state.ScheduleId.ValueStringPointer(),
 		LandingPageUrl:       state.LandingPageUrl.ValueString(),
 		ContractType:         piano_publisher.EMAILDOMAINCONTRACT,
 	}
@@ -305,6 +312,7 @@ func (r *ContractResource) Update(ctx context.Context, req resource.UpdateReques
 	state.SeatsNumber = types.Int32Value(result.Contract.SeatsNumber)
 	state.IsHardSeatsLimitType = types.BoolValue(result.Contract.IsHardSeatsLimitType)
 	state.SeatsNumber = types.Int32Value(result.Contract.SeatsNumber)
+	state.ScheduleId = types.StringPointerValue(result.Contract.ScheduleId)
 	state.LandingPageUrl = types.StringValue(result.Contract.LandingPageUrl)
 	tflog.Info(ctx, fmt.Sprintf("complete updating contract %s(id: %s)", state.Name, state.ContractId))
 
