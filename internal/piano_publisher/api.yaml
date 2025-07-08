@@ -18968,6 +18968,7 @@ components:
         schedule_id:
           type: string
           description: The schedule ID
+          nullable: true
         contract_is_active:
           type: boolean
           description: Whether the contract is active

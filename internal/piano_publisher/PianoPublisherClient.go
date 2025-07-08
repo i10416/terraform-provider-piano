@@ -5304,7 +5304,7 @@ type Contract struct {
 	Rid string `json:"rid"`
 
 	// ScheduleId The schedule ID
-	ScheduleId string `json:"schedule_id"`
+	ScheduleId *string `json:"schedule_id"`
 
 	// SeatsNumber The number of users who can access this contract
 	SeatsNumber int32 `json:"seats_number"`
