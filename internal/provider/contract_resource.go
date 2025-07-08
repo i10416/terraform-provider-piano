@@ -203,6 +203,11 @@ func (r *ContractResource) Create(ctx context.Context, req resource.CreateReques
 	plan.LicenseeId = types.StringValue(result.Contract.LicenseeId)
 	plan.Rid = types.StringValue(result.Contract.Rid)
 	plan.Name = types.StringValue(result.Contract.Name)
+	if plan.Description.IsNull() && result.Contract.Description != nil && *result.Contract.Description == "" {
+		result.Contract.Description = nil
+	} else {
+		plan.Description = types.StringPointerValue(result.Contract.Description)
+	}
 	plan.Description = types.StringPointerValue(result.Contract.Description)
 	plan.IsHardSeatsLimitType = types.BoolValue(result.Contract.IsHardSeatsLimitType)
 	plan.SeatsNumber = types.Int32Value(result.Contract.SeatsNumber)
@@ -242,6 +247,9 @@ func (r *ContractResource) Read(ctx context.Context, req resource.ReadRequest, r
 	// Populate state with the response data
 	state.Rid = types.StringValue(result.Contract.Rid)
 	state.Name = types.StringValue(result.Contract.Name)
+	if state.Description.IsNull() && result.Contract.Description != nil && *result.Contract.Description == "" {
+		result.Contract.Description = nil
+	}
 	state.Description = types.StringPointerValue(result.Contract.Description)
 	state.CreateDate = types.Int64Value(int64(result.Contract.CreateDate))
 	state.ContractIsActive = types.BoolValue(result.Contract.ContractIsActive)
@@ -308,6 +316,9 @@ func (r *ContractResource) Update(ctx context.Context, req resource.UpdateReques
 	state.ContractType = types.StringValue(string(result.Contract.ContractType))
 	state.Rid = types.StringValue(result.Contract.Rid)
 	state.Name = types.StringValue(result.Contract.Name)
+	if state.Description.IsNull() && result.Contract.Description != nil && *result.Contract.Description == "" {
+		result.Contract.Description = nil
+	}
 	state.Description = types.StringPointerValue(result.Contract.Description)
 	state.SeatsNumber = types.Int32Value(result.Contract.SeatsNumber)
 	state.IsHardSeatsLimitType = types.BoolValue(result.Contract.IsHardSeatsLimitType)
