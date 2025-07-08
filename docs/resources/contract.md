@@ -29,6 +29,7 @@ Contract Resource. This resource is used to create, update, and delete a contrac
 
 - `description` (String) The description of the contract
 - `landing_page_url` (String) The relative URL of the contract. It will be appended to the licensing base URL to get the complete landing page URL
+- `schedule_id` (String) Schedule ID
 
 ### Read-Only
 
