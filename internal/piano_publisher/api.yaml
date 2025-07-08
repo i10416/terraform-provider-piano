@@ -33568,10 +33568,10 @@ components:
       additionalProperties: false
     ContractDomainArrayResult:
       required:
-        - ContractDomain
+        - ContractDomainList
       type: object
       properties:
-        ContractDomain:
+        ContractDomainList:
           type: array
           items:
             $ref: '#/components/schemas/ContractDomain'
