@@ -5341,7 +5341,7 @@ type ContractDomainStatus string
 
 // ContractDomainArrayResult defines model for ContractDomainArrayResult.
 type ContractDomainArrayResult struct {
-	ContractDomain []ContractDomain `json:"ContractDomain"`
+	ContractDomainList []ContractDomain `json:"ContractDomainList"`
 }
 
 // ContractDomainResult defines model for ContractDomainResult.
