@@ -33987,10 +33987,10 @@ components:
       additionalProperties: false
     TermChangeOptionResult:
       required:
-        - TermChangeOption
+        - term_change_option
       type: object
       properties:
-        TermChangeOption:
+        term_change_option:
           $ref: '#/components/schemas/TermChangeOption'
       additionalProperties: false
     ExternalTermResult:

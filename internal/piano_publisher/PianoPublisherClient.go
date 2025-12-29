@@ -15836,7 +15836,7 @@ type TermChangeOptionBillingTiming string
 
 // TermChangeOptionResult defines model for TermChangeOptionResult.
 type TermChangeOptionResult struct {
-	TermChangeOption TermChangeOption `json:"TermChangeOption"`
+	TermChangeOption TermChangeOption `json:"term_change_option"`
 }
 
 // TermConversion defines model for TermConversion.

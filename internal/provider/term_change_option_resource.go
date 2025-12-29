@@ -149,7 +149,7 @@ func (r *TermChangeOptionResource) Create(ctx context.Context, req resource.Crea
 		return
 	}
 	option := TermChangeOptionV2ResourceModelFrom(result.TermChangeOption)
-	tflog.Info(ctx, fmt.Sprintf("created Term Change Option %s from %s to %s", option.TermChangeOptionId.ValueString(), option.FromTermId.ValueString(), option.ToTermId.ValueString()))
+	tflog.Info(ctx, fmt.Sprintf("created Term Change Option:%s from %s to %s", option.TermChangeOptionId.ValueString(), option.FromTermId.ValueString(), option.ToTermId.ValueString()))
 	plan.TermChangeOptionId = option.TermChangeOptionId
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 
