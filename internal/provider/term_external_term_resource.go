@@ -466,7 +466,7 @@ func (r *ExternalTermResource) Update(ctx context.Context, req resource.UpdateRe
 		return
 	}
 
-	tflog.Info(ctx, fmt.Sprintf("creating resource %s in %s", state.Name.ValueString(), state.Aid.ValueString()))
+	tflog.Info(ctx, fmt.Sprintf("updating resource %s in %s", state.Name.ValueString(), state.Aid.ValueString()))
 	request := piano_publisher.PostPublisherTermExternalUpdateFormdataRequestBody{
 		TermId:                   state.TermId.ValueString(),
 		ExternalApiId:            state.ExternalApiId.ValueString(),

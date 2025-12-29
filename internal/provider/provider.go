@@ -158,6 +158,8 @@ func (p *PianoProvider) Resources(ctx context.Context) []func() resource.Resourc
 		NewOfferTermOrderResource,
 		NewCustomFieldResource,
 		NewContractDomainResource,
+		NewPaymentTermV2Resource,
+		NewTermChangeOptionResource,
 	}
 }
 
